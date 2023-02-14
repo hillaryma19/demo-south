@@ -1,0 +1,314 @@
+@import './reset.scss';
+@import './variables.scss';
+@import './sidebar.scss';
+html, body{
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+}
+/* flex布局 start */
+.flex-between {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+}
+.flex-start {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: flex-start;
+}
+.flex-end {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: flex-end;
+}
+.flex-center {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
+}
+.flex-around {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-around;
+}
+.flex-row{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-basis: auto;
+}
+.flex-column{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  flex-wrap: wrap;
+  flex-basis: auto;
+}
+.center {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* flex布局 end */
+
+/* 清除浮动 */
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+/* 文字溢出隐藏 start */
+.text-ellipsis{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	overflow-wrap: break-word;
+	-webkit-box-orient: vertical;
+	white-space: nowrap;
+}
+.line-clamp-1{
+	-webkit-line-clamp: 1;
+}
+.line-clamp-2{
+	-webkit-line-clamp: 2;
+}
+.line-clamp-3{
+	-webkit-line-clamp: 3;
+}
+/* 文字溢出隐藏 end */
+
+/* 分页 start */
+.pagination-wrap{
+  padding-top: 10px;
+  text-align: center;
+}
+/* 分页 end */
+
+/* scroll bar样式 start */
+::v-deep .el-main::-webkit-scrollbar{
+  width: 8px;
+  background-color: #ffffff;
+}
+
+::v-deep .el-main::-webkit-scrollbar-track{
+  background-color: #ffffff;
+}
+
+::v-deep .el-main::-webkit-scrollbar-thumb{
+  background: #D9DCE3;
+  border-radius: 10px;
+}
+::v-deep .el-aside::-webkit-scrollbar{
+  width: 8px;
+  background-color: #ffffff;
+}
+
+::v-deep .el-aside::-webkit-scrollbar-track{
+  background-color: #ffffff;
+}
+
+::v-deep .el-aside::-webkit-scrollbar-thumb{
+  background: #D9DCE3;
+  border-radius: 10px;
+}
+.scroll-bar-style{
+  overflow-y: auto;
+}
+.scroll-bar-style::-webkit-scrollbar {
+  width: 8px;
+  background-color: #ffffff;
+}
+
+.scroll-bar-style::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+.scroll-bar-style::-webkit-scrollbar-thumb {
+  background: #D9DCE3;
+  border-radius: 10px;
+}
+/* scroll bar样式 end */
+
+/* text-align start */
+.ta-l{
+  text-align: left;
+}
+.ta-r{
+  text-align: right;
+}
+.ta-c{
+  text-align: center;
+}
+/* text-align end */
+.wrapper{
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  .search-box {
+    padding-right: 10px;
+    .search-title {
+      line-height: 32px;
+    }
+  }
+}
+.container{
+  position: relative;
+  height: 100%;
+}
+.disabled{
+  pointer-events: none !important;
+}
+.hidden{
+  visibility: hidden;
+}
+.pointer{
+  cursor: pointer;
+}
+.move{
+  cursor: move;
+}
+.grab{
+  cursor: grab;
+}
+/* display start */
+.hide{
+  display: none !important;
+}
+.block{
+  display: block;
+}
+.inline{
+  display: inline;
+}
+.inline-block{
+  display: inline-block;
+}
+/* display end */
+
+/* padding 10px start */
+.pad-bt-10{
+  padding-bottom: 10px;
+}
+.pad-lt-10{
+  padding-left: 10px;
+}
+.pad-tp-10{
+  padding-top: 10px;
+}
+.pad-rt-10{
+  padding-right: 10px;
+}
+
+.pad-bt-5{
+  padding-bottom: 5px;
+}
+.pad-lt-5{
+  padding-left: 5px;
+}
+.pad-tp-5{
+  padding-top: 5px;
+}
+.pad-rt-5{
+  padding-right: 5px;
+}
+/* padding 10px end */
+
+/* float start */
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
+}
+/* float end */
+
+/* position start */
+.pos-re{
+  position: relative;
+}
+.pos-ab{
+  position: absolute;
+}
+.pos-fixed{
+  position: fixed;
+}
+/* position end */
+/* element-ui dialog 框样式修改 start */
+  .el-dialog{
+    margin-top: 8vh !important;
+    .el-dialog__body{
+      padding: 16px!important;
+      max-height: 74vh;
+      overflow-y: auto;
+    }
+    .el-dialog__body::-webkit-scrollbar {
+      width: 8px;
+      background-color: #ffffff;
+    }
+
+    .el-dialog__body::-webkit-scrollbar-track {
+      background-color: #ffffff;
+    }
+
+    .el-dialog__body::-webkit-scrollbar-thumb {
+      background: #D9DCE3;
+      border-radius: 10px;
+    }
+  }
+/* element-ui dialog 框样式修改 end */
+/* 推演状态 start */
+.s-status{
+  padding: 0 8px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+}
+.status_1{
+  background-color: #909399;
+}
+.status_2{
+  background-color: #13c2c2;
+}
+.status_3{
+  background-color: #67C23A;
+}
+.status_4{
+  background-color: #F56C6C;
+}
+.status_5{
+  background-color: #E6A23C;
+}
+/* 推演状态 end */
+.el-tooltip__popper.is-dark{
+  max-width: 68%;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 6px;
+}
+.el-tabs__item.is-active{
+  font-weight: 600;
+}
+.tree-label{
+  display: inline-block;
+  max-width: 180px;
+  height: 26px;
+  line-height: 26px;
+}
