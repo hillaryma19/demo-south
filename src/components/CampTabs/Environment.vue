@@ -92,10 +92,10 @@ export default {
   methods: {
     onWindowResize() {
       this.$nextTick(() => {
-        let tabpanel = this.$refs.tabpanel.$el;
+        let tabpanel = this.$refs.tabpanel;
         if (tabpanel) {
-          let tpHeight = tabpanel.offsetHeight;
-          console.log(tabpanel.offsetHeight, "==tabpanel.offsetHeight");
+          let tabpanelEl = this.$refs.tabpanel.$el;
+          let tpHeight = tabpanelEl.offsetHeight;
           this.tableHeight = tpHeight - 42;
         }
       });

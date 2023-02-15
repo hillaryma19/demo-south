@@ -69,7 +69,12 @@
         class="bottom-container"
         ref
         :style="{ width: `${bottomPanelWidth}px` }"
-        v-show="activeName == 2 || activeName == 3 || activeName == 4"
+        v-show="
+          activeName == 2 ||
+          activeName == 6 ||
+          activeName == 7 ||
+          activeName == 4
+        "
       >
         <div
           @mousedown="onVerticalMousedown"
@@ -122,7 +127,6 @@
 <script>
 const FormationTree = () => import("@/components/CampTabs/FormationTree.vue");
 const DeploymentTree = () => import("@/components/CampTabs/DeploymentTree.vue");
-const GroupTree = () => import("@/components/CampTabs/GroupTree.vue");
 const GroupPower = () => import("@/components/CampTabs/GroupPower.vue");
 const GroupAuth = () => import("@/components/CampTabs/GroupAuth.vue");
 const GroupCommunicate = () =>
@@ -134,6 +138,7 @@ const RightPanel = () => import("@/components/RightPanel/Index.vue");
 const PowerAdd = () => import("@/components/CampTabs/PowerAdd.vue");
 const Map = () => import("@/components/Map/Index.vue");
 const Environment = () => import("@/components/CampTabs/Environment.vue");
+const GroupTree = () => import("@/components/CampTabs/GroupTree.vue");
 const leftTitleArray = [
   "环境部署",
   "想定编程",
@@ -315,7 +320,7 @@ export default {
           this.leftTitle = leftTitleArray[1];
           break;
         case "7":
-          component = "GroupTree";
+          component = "DeploymentTree";
           this.leftTitle = leftTitleArray[2];
           break;
         default:

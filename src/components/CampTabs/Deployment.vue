@@ -1,129 +1,16 @@
 <template>
   <div class="container">
-    <div class="inner" ref="wrapperInner2">
-      <!-- <Map :height="drawerData.drawerHeight"></Map> -->
-      <div class="tabs-box">
-        <el-container style="height: 100%">
-          <div
-            class="left scroll-bar-style"
-            ref="leftBox"
-            :style="{ height: `${drawerData.drawerHeight}px` }"
-          >
-            <el-container
-              direction="vertical"
-              style="width: 100%; height: 100%"
-            >
-              <div class="tree-box scroll-bar-style">
-                <el-tree
-                  :data="treeData"
-                  :props="defaultProps"
-                  :expand-on-click-node="false"
-                  default-expand-all
-                >
-                  <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <span>{{ node.label }}</span>
-                    <span v-if="!data.children">
-                      <el-button
-                        type="text"
-                        size="small"
-                        @click="() => handleNodeClick(data)"
-                      >
-                        详情
-                      </el-button>
-                      <el-button
-                        type="text"
-                        size="small"
-                        @click="() => handleDeploy(data)"
-                      >
-                        部署
-                      </el-button>
-                    </span>
-                  </span></el-tree
-                >
-              </div>
-              <div class="facility-box scroll-bar-style" ref="facilityBox">
-                <div class="pad-bt-10 pad-tp-10">设施模板库</div>
-                <el-table
-                  :data="tableData"
-                  :height="tableHeight"
-                  :header-cell-style="{
-                    background: '#f5f7fa',
-                    color: '#94969A',
-                  }"
-                  size="mini"
-                  border
-                  highlight-current-row
-                  tooltip-effect="dark"
-                  v-loading="loading"
-                  element-loading-text="加载中"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(0, 0, 0, 0.8)"
-                  style="width: 100%"
-                >
-                  <el-table-column
-                    prop="name"
-                    label="设施名称"
-                    min-width="80"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    prop="address"
-                    label="设施说明"
-                    min-width="100"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column label="操作" min-width="45">
-                    <template slot-scope="scope">
-                      <el-button
-                        @click="handleDeploy(scope.row)"
-                        type="text"
-                        size="mini"
-                        >部署</el-button
-                      >
-                    </template></el-table-column
-                  >
-                </el-table>
-                <!-- 分页 -->
-                <div class="pagination-wrap" ref="paginationWrap">
-                  <el-pagination
-                    background
-                    size="mini"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="cp"
-                    :page-size="rows"
-                    layout="total, prev, pager, next"
-                    :total="total"
-                  >
-                  </el-pagination>
-                </div>
-              </div>
-            </el-container>
-          </div>
-        </el-container>
-      </div>
-    </div>
-    <right-panel
-      :drawer-data="drawerData"
-      @handleDrawerInfo="getDrawerInfo"
-    ></right-panel>
-    <deployment-add
-      :dialog-data="dialogData"
-      @handleDialogInfo="getDialogInfo"
-    ></deployment-add>
+    <div class="pad-tp-10 pad-bt-10"><CampSelect></CampSelect></div>
+    <DeployTree></DeployTree>
   </div>
 </template>
 
 <script>
-const RightPanel = () => import("@/components/RightPanel/Index.vue");
-const DeploymentAdd = () => import("@/components/CampTabs/DeploymentAdd.vue");
-const Map = () => import("@/components/Map/Index.vue");
+const DeployTree = () => import("@/components/DeployTree/Index.vue");
 import { facilityFindAll } from "@/api/facility.js";
 export default {
   name: "PowerDeployment",
-  components: { RightPanel, DeploymentAdd, Map },
+  components: { DeployTree },
   data() {
     return {
       tableHeight: 200,
