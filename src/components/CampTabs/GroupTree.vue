@@ -1,76 +1,19 @@
 <template>
   <div class="container">
-    <div class="scroll-bar-style" ref="leftBox">
-      <div class="pad-bt-10" v-if="activeName == 5">
-        <el-button size="small" type="primary" @click="handleAddMarshal(1)"
-          >添加编组</el-button
-        >
-      </div>
-      <el-tree
-        :data="treeData"
-        :props="defaultProps"
-        :expand-on-click-node="false"
-        default-expand-all
-      >
-        <span class="custom-tree-node" slot-scope="{ node, data }">
-          <span>{{ node.label }}</span>
-          <span v-if="activeName == 5">
-            <el-button
-              type="text"
-              size="small"
-              @click="() => handleAddMarshal(1, data)"
-            >
-              添加
-            </el-button>
-            <el-button
-              type="text"
-              size="small"
-              @click="() => handleNodeClick(data)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              type="text"
-              size="small"
-              @click="() => handleNodeClick(data)"
-            >
-              删除
-            </el-button>
-          </span>
-        </span></el-tree
-      >
-    </div>
-    <power-add
-      :dialog-data="dialogData"
-      @handleDialogInfo="getDialogInfo"
-    ></power-add>
-    <group-add
-      :dialog-data="groupDialogData"
-      @handleDialogInfo="getGroupDialogInfo"
-    ></group-add>
-    <user-add
-      :dialog-data="userDialogData"
-      @handleDialogInfo="getUserDialogInfo"
-    ></user-add>
-    <auth-add
-      :dialog-data="authDialogData"
-      @handleDialogInfo="getAuthDialogInfo"
-    ></auth-add>
+    <div class="pad-tp-10 pad-bt-10"><CampSelect></CampSelect></div>
+    <GroupTreeList></GroupTreeList>
   </div>
 </template>
 
 <script>
 import { commandStaffFindAll, communicationFindById } from "@/api/api";
 import { scenarioPowerRemove } from "@/api/scenario.js";
-const PowerAdd = () => import("@/components/CampTabs/PowerAdd.vue");
-const GroupAdd = () => import("@/components/CampTabs/GroupAdd.vue");
-const UserAdd = () => import("@/components/CampTabs/UserAdd.vue");
-const AuthAdd = () => import("@/components/CampTabs/AuthAdd.vue");
-const CommunicateAdd = () => import("@/components/CampTabs/CommunicateAdd.vue");
+const CampSelect = () => import("../CampSelect/Index.vue");
+const GroupTreeList = () => import("../GroupTree/Index.vue");
 
 export default {
   name: "GroupTree",
-  components: { PowerAdd, GroupAdd, UserAdd, AuthAdd, CommunicateAdd },
+  components: { GroupTreeList, CampSelect },
   props: {
     activeName: {
       type: [String, Number],

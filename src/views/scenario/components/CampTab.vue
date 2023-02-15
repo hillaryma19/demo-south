@@ -1,10 +1,12 @@
 <template>
   <div class="container">
     <div class="inner clearfix" ref="wrapperInner">
+      <!-- 地图 -->
       <Map
         v-show="currentComponent != 'FormationTree'"
         :height="drawerData.drawerHeight"
       ></Map>
+      <!-- 左侧 -->
       <div
         class="left-tree flex-row"
         ref="leftTree"
@@ -32,12 +34,14 @@
               </div>
             </el-container>
           </div>
+          <!-- x resize line -->
           <div
             @mousedown="onHorizontalMousedown"
             class="resize-line resize-line-x"
             ref="horizontalResize"
             v-show="!isLtFold"
           ></div>
+          <!-- 左侧折叠icon -->
           <div
             class="fold-box pointer"
             @click="handleLeftFold"
@@ -60,6 +64,7 @@
           </div>
         </div>
       </div>
+      <!-- 底部 -->
       <div
         class="bottom-container"
         ref
@@ -128,7 +133,6 @@ const Plan = () => import("@/components/CampTabs/Plan.vue");
 const RightPanel = () => import("@/components/RightPanel/Index.vue");
 const PowerAdd = () => import("@/components/CampTabs/PowerAdd.vue");
 const Map = () => import("@/components/Map/Index.vue");
-const Equip = () => import("@/components/Equip/Index.vue");
 const Environment = () => import("@/components/CampTabs/Environment.vue");
 const leftTitleArray = [
   "环境部署",
@@ -147,7 +151,6 @@ export default {
     Scheme,
     Plan,
     Map,
-    Equip,
     GroupPower,
     GroupUser,
     GroupCommunicate,
@@ -276,14 +279,11 @@ export default {
   created() {
     this.removeKeyEventListener();
     this.addKeyEventListener();
-    console.log(999);
   },
   mounted() {
     this.$nextTick(() => {
-      // this.onWindowResize();
       this.handleActiveName(this.activeName);
       window.onresize = () => {
-        // this.onWindowResize();
         this.handleActiveName(this.activeName);
       };
     });
@@ -302,7 +302,7 @@ export default {
           this.leftTitle = leftTitleArray[1];
           break;
         case "4":
-          component = "DeploymentTree";
+          component = "GroupTree";
           this.leftTitle = leftTitleArray[2];
           break;
         case "5":
@@ -313,16 +313,6 @@ export default {
           component = "GroupTree";
           this.leftTitle = leftTitleArray[4];
           break;
-        case "7":
-          component = "GroupTree";
-          break;
-        case "8":
-          component = "Scheme";
-          break;
-        case "9":
-          component = "Plan";
-          break;
-
         default:
           break;
       }
@@ -409,7 +399,6 @@ export default {
     },
     onHorizontalResizeStart(event) {
       let resizeDom = this.$refs.horizontalResize;
-      console.log(resizeDom, "==resizeDom");
       this.isHorizontalResize = true;
       this.horizontalResizeX.start =
         event.clientX + document.documentElement.scrollLeft;
