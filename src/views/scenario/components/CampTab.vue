@@ -136,7 +136,8 @@ const Map = () => import("@/components/Map/Index.vue");
 const Environment = () => import("@/components/CampTabs/Environment.vue");
 const leftTitleArray = [
   "环境部署",
-  "想定编程/想定部署",
+  "想定编程",
+  "想定部署",
   "想定编组",
   "计划任务",
 ];
@@ -297,21 +298,25 @@ export default {
           component = "Environment";
           this.leftTitle = leftTitleArray[0];
           break;
-        case "3":
-          component = "Environment";
-          this.leftTitle = leftTitleArray[1];
-          break;
+        // case "3":
+        //   component = "Environment";
+        //   this.leftTitle = leftTitleArray[1];
+        //   break;
         case "4":
-          component = "GroupTree";
-          this.leftTitle = leftTitleArray[2];
-          break;
-        case "5":
           component = "GroupTree";
           this.leftTitle = leftTitleArray[3];
           break;
-        case "6":
+        case "5":
           component = "GroupTree";
           this.leftTitle = leftTitleArray[4];
+          break;
+        case "6":
+          component = "GroupTree";
+          this.leftTitle = leftTitleArray[1];
+          break;
+        case "7":
+          component = "GroupTree";
+          this.leftTitle = leftTitleArray[2];
           break;
         default:
           break;
