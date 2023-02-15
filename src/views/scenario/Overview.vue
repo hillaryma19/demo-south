@@ -256,7 +256,7 @@ export default {
     },
     // 点击添加
     handleAdd() {
-      this.$router.push({ path: "/scenario/step" });
+      this.$router.push({ path: "/scenario/tab" });
       // this.dialogData.dialogVisible = true;
       // this.dialogData.dialogType = type;
     },
@@ -265,7 +265,7 @@ export default {
       // this.dialogData.id = row.id;
       // this.handleAdd(2);
       this.$router.push({
-        path: "/scenario/step",
+        path: "/scenario/tab",
         query: { id: row.id, name: row.name },
       });
     },
@@ -296,7 +296,7 @@ export default {
         });
     },
     handleClick(row) {
-      this.$router.push({ path: "/scenario/step", query: { id: row.name } });
+      this.$router.push({ path: "/scenario/tab", query: { id: row.name } });
       console.log(row);
     },
     onWindowResize() {

@@ -1,7 +1,7 @@
 <template>
   <div class="c-container">
     <div class="pad-bt-10">
-      <div class="title pad-bt-10">阵营管理</div>
+      <div class="title pad-lt-10">阵营管理</div>
       <div class="list" style="display: flex">
         <div
           class="tag"
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div>
-      <div class="title pad-bt-10 flex-between">
+      <div class="title pad-lt-10 pad-rt-10 flex-between">
         <div>阵营关系</div>
         <div>
           <i
@@ -495,6 +495,12 @@ export default {
 
 <style lang="scss" scoped>
 .c-container {
+  .title {
+    font-size: 16px;
+    line-height: 32px;
+    background-color: rgb(191, 191, 191);
+    margin-bottom: 12px;
+  }
   .icon-camp {
     margin-left: 10px;
     font-size: 20px;
@@ -545,9 +551,10 @@ export default {
       left: 94px;
     }
     .metrix-ul-vertical {
-      position: absolute;
-      color: #409eff;
-      top: 34px;
+      // position: absolute;
+      // color: #409eff;
+      // top: 34px;
+      padding-top: 34px;
       .vertical-item {
         width: 94px;
         height: 34px;

@@ -78,6 +78,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .t-wrapper {
+  height: 100%;
   .content {
     height: calc(100% - 90px);
   }

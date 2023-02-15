@@ -15,11 +15,15 @@
             class="left-component"
             ref="leftBox"
             :style="{ width: `${leftPanelWidth}px` }"
-            v-show="!isFold"
+            v-show="!isLtFold"
           >
-            <el-container direction="vertical">
-              <div class="left-title">环境部署</div>
-              <div class="">
+            <el-container direction="vertical" style="height: 100%">
+              <div class="panel-tit-box pad-tp-10">
+                <div class="panel-title flex-start">
+                  <span class="line"></span><span>{{ leftTitle }}</span>
+                </div>
+              </div>
+              <div class="" style="flex: 1">
                 <component
                   :is="currentComponent"
                   :active-name="activeName"
@@ -32,64 +36,69 @@
             @mousedown="onHorizontalMousedown"
             class="resize-line resize-line-x"
             ref="horizontalResize"
-            v-show="!isFold"
+            v-show="!isLtFold"
           ></div>
           <div
             class="fold-box pointer"
             @click="handleLeftFold"
-            :style="{ right: isFold ? `-20px` : `20px` }"
+            :style="{ right: isLtFold ? `-20px` : `10px` }"
           >
             <el-tooltip
               class="item"
               effect="dark"
-              :content="isFold ? '展开' : '折叠'"
+              :content="isLtFold ? '展开' : '折叠'"
               placement="top"
             >
               <i
                 class="fold"
                 :class="{
-                  'el-icon-s-unfold': !isFold,
-                  'el-icon-s-fold': isFold,
+                  'el-icon-s-unfold': !isLtFold,
+                  'el-icon-s-fold': isLtFold,
                 }"
               ></i>
             </el-tooltip>
           </div>
         </div>
-        <div class="right-container" v-if="currentComponent == 'FormationTree'">
-          <Equip></Equip>
-        </div>
       </div>
       <div
         class="bottom-container"
         ref
-        :style="{ width: `${rightWidth}px` }"
-        v-show="activeName == 5 || activeName == 6 || activeName == 7"
+        :style="{ width: `${bottomPanelWidth}px` }"
+        v-show="activeName == 2 || activeName == 3 || activeName == 4"
       >
         <div
           @mousedown="onVerticalMousedown"
           class="resize-line resize-line-y"
-          :style="{ width: `${rightWidth}px` }"
+          :style="{ width: `${bottomPanelWidth}px` }"
           ref="verticalResize"
         ></div>
         <div
           class="bottom-component scroll-bar-style"
           ref="bottomPanel"
-          :style="{ height: `${rightHeight}px` }"
+          :style="{ height: `${bottomPanelHeight}px` }"
         >
-          <div class="flex-between">
-            <GroupUser :active-name="activeName"></GroupUser>
-            <GroupPower
-              v-if="activeName == 5"
-              :active-name="activeName"
-            ></GroupPower>
-            <GroupAuth
-              v-if="activeName == 6"
-              :active-name="activeName"
-            ></GroupAuth>
-            <GroupCommunicate
-              v-if="activeName == 7"
-              :active-name="activeName"
-            ></GroupCommunicate>
+          <div class="bottom-inner">
+            <div class="panel-tit-box flex-between">
+              <div class="panel-title flex-start">
+                <span class="line"></span><span>{{ bottomPanelTitle }}</span>
+              </div>
+              <div class="fold-box2 pointer" @click="handleBottomFold">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="isBtFold ? '展开' : '折叠'"
+                  placement="top"
+                >
+                  <i
+                    class="fold"
+                    :class="{
+                      'el-icon-caret-bottom': !isBtFold,
+                      'el-icon-caret-top': isBtFold,
+                    }"
+                  ></i>
+                </el-tooltip>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -120,6 +129,13 @@ const RightPanel = () => import("@/components/RightPanel/Index.vue");
 const PowerAdd = () => import("@/components/CampTabs/PowerAdd.vue");
 const Map = () => import("@/components/Map/Index.vue");
 const Equip = () => import("@/components/Equip/Index.vue");
+const Environment = () => import("@/components/CampTabs/Environment.vue");
+const leftTitleArray = [
+  "环境部署",
+  "想定编程/想定部署",
+  "想定编组",
+  "计划任务",
+];
 export default {
   name: "PowerFormation",
   components: {
@@ -136,6 +152,7 @@ export default {
     GroupUser,
     GroupCommunicate,
     GroupAuth,
+    Environment,
   },
   props: {
     activeName: {
@@ -154,9 +171,10 @@ export default {
       leftTabWidth: 0,
       leftTreeWidth: 500,
       wrapperInnerWidth: 1000,
-      rightWidth: 420,
-      rightHeight: 400,
-      currentComponent: "FormationTree",
+      wrapperInnerHeight: 1000,
+      bottomPanelWidth: 420,
+      bottomPanelHeight: 400,
+      currentComponent: "Environment",
       dialogData: {
         dialogVisible: false,
       },
@@ -242,14 +260,17 @@ export default {
       },
       splitterHorizontalMoveY: 0,
       splitterHorizontalMoveX: 0,
-      leftPanelWidth: 500,
-      isFold: false,
+      leftPanelWidth: 300,
+      isLtFold: false,
+      isBtFold: false,
       isVerticalResize: false,
       verticalResizeY: {
         start: 0,
         end: 0,
       },
       splitterVerticalMoveY: 0,
+      leftTitle: leftTitleArray[0],
+      bottomPanelTitle: "实体属性编辑",
     };
   },
   created() {
@@ -272,17 +293,25 @@ export default {
       let name = val,
         component = "";
       switch (name) {
+        case "2":
+          component = "Environment";
+          this.leftTitle = leftTitleArray[0];
+          break;
         case "3":
-          component = "FormationTree";
+          component = "Environment";
+          this.leftTitle = leftTitleArray[1];
           break;
         case "4":
           component = "DeploymentTree";
+          this.leftTitle = leftTitleArray[2];
           break;
         case "5":
           component = "GroupTree";
+          this.leftTitle = leftTitleArray[3];
           break;
         case "6":
           component = "GroupTree";
+          this.leftTitle = leftTitleArray[4];
           break;
         case "7":
           component = "GroupTree";
@@ -324,6 +353,7 @@ export default {
         if (wrapperInner) {
           this.drawerData.drawerHeight = wrapperInner.offsetHeight - 4;
           this.wrapperInnerWidth = wrapperInner.offsetWidth;
+          this.wrapperInnerHeight = wrapperInner.offsetHeight;
         }
         if (leftTab) {
           this.leftTabWidth = leftTab.offsetWidth;
@@ -331,8 +361,8 @@ export default {
         if (leftTree) {
           this.leftTreeWidth = leftTree.offsetWidth;
         }
-        this.rightWidth =
-          this.wrapperInnerWidth - this.leftTabWidth - this.leftTreeWidth;
+        this.bottomPanelWidth =
+          this.wrapperInnerWidth - this.leftTabWidth - this.leftTreeWidth - 10;
       });
     },
     // 点击添加
@@ -399,7 +429,7 @@ export default {
     onHorizontalResizeMouseup() {
       let leftPanelDom = this.$refs.leftBox,
         panelWidth = leftPanelDom.offsetWidth || 0,
-        maxWidth = 1200,
+        maxWidth = this.wrapperInnerWidth,
         minWidth = 120;
       this.isHorizontalResize = false;
       this.leftPanelWidth = panelWidth + this.horizontalResizeX.end;
@@ -407,10 +437,10 @@ export default {
         this.leftPanelWidth = maxWidth;
       }
       if (this.leftPanelWidth < minWidth) {
-        this.isFold = true;
+        this.isLtFold = true;
         this.leftPanelWidth = minWidth;
       } else if (this.leftPanelWidth > minWidth) {
-        this.isFold = false;
+        this.isLtFold = false;
       }
       this.onWindowResize();
       window.removeEventListener("mousemove", this.onHorizontalResizeMove);
@@ -448,19 +478,22 @@ export default {
       }
     },
     onVerticalResizeMouseup() {
-      let maxHeight = 800,
+      let maxHeight = this.wrapperInnerHeight,
         minHeight = 120,
         bottomPanelDom = this.$refs.bottomPanel,
         bottomPanelHeight = bottomPanelDom.offsetHeight,
         delta = bottomPanelHeight - this.verticalResizeY.end;
       this.isVerticalResize = false;
-      this.rightHeight = delta;
-      if (this.rightHeight > maxHeight) {
-        this.rightHeight = maxHeight;
+      this.bottomPanelHeight = delta;
+      if (this.bottomPanelHeight > maxHeight) {
+        this.bottomPanelHeight = maxHeight;
+        this.isBtFold = true;
       }
-      if (this.rightHeight < minHeight) {
-        this.rightHeight = minHeight;
+      if (this.bottomPanelHeight < minHeight) {
+        this.bottomPanelHeight = minHeight;
+        this.isBtFold = false;
       }
+
       this.onWindowResize();
       window.removeEventListener("mousemove", this.onVerticalResizeMove);
       window.removeEventListener("touchmove", this.onVerticalResizeMove);
@@ -469,7 +502,15 @@ export default {
       window.removeEventListener("contextmenu", this.onVerticalResizeMouseup);
     },
     handleLeftFold() {
-      this.isFold = !this.isFold;
+      this.isLtFold = !this.isLtFold;
+    },
+    handleBottomFold() {
+      this.isBtFold = !this.isBtFold;
+      if (this.isBtFold) {
+        this.bottomPanelHeight = 42;
+      } else {
+        this.bottomPanelHeight = this.wrapperInnerHeight - 12;
+      }
     },
   },
   activated() {
@@ -492,7 +533,20 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-
+    .panel-tit-box {
+      border-bottom: 1px solid #e4e7ed;
+      .panel-title {
+        line-height: 20px;
+        padding-bottom: 8px;
+        .line {
+          width: 2px;
+          height: 20px;
+          margin-right: 5px;
+          background-color: #409eff;
+          border-radius: 2px;
+        }
+      }
+    }
     .tabs-container {
       position: absolute;
       left: 0;
@@ -506,38 +560,35 @@ export default {
       left: 0;
       top: 10px;
       height: calc(100% - 10px);
-
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
       .left-container {
         position: relative;
         height: 100%;
         background-color: #fff;
         .left-component {
           height: 100%;
-          padding: 0 12px;
+          padding: 0 10px;
         }
         .fold-box {
           position: absolute;
-          top: 0;
-          right: 28px;
-          line-height: 32px;
-          .fold {
-            font-size: 18px;
-            cursor: pointer;
-            &:hover {
-              opacity: 0.8;
-            }
-          }
+          top: 12px;
+          right: 0;
+          line-height: 20px;
         }
       }
-      .right-container {
-        flex: 1;
-        height: 100%;
-        padding: 0 12px 0 20px;
+    }
+    .fold {
+      font-size: 18px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.8;
       }
     }
     .resize-line {
       position: absolute;
-      background-color: #c0c4cc;
+      // background-color: #c0c4cc;
+      background-color: transparent;
       z-index: 1;
     }
     .resize-line-x {
@@ -546,22 +597,27 @@ export default {
       margin: 0 12px;
       width: 2px;
       height: 100%;
-      cursor: w-resize;
+      cursor: col-resize;
     }
     .resize-line-y {
       right: 0;
       top: 0;
       height: 2px;
-      cursor: n-resize;
+      cursor: row-resize;
     }
     .bottom-container {
       position: absolute;
       right: 0;
       bottom: 0;
       background-color: #fff;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
       .bottom-component {
         overflow-y: auto;
-        padding: 12px;
+        padding: 10px;
+        .bottom-inner {
+          height: 100%;
+        }
       }
     }
     ::v-deep .custom-tree-container {
