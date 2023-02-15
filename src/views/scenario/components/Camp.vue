@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="c-container">
     <div class="pad-bt-10">
       <div class="title pad-bt-10">阵营管理</div>
       <div class="list" style="display: flex">
@@ -494,7 +494,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.c-container {
   .icon-camp {
     margin-left: 10px;
     font-size: 20px;

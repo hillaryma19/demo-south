@@ -5,18 +5,6 @@
         v-show="currentComponent != 'FormationTree'"
         :height="drawerData.drawerHeight"
       ></Map>
-
-      <div class="tabs-container" ref="tabsContainer">
-        <el-tabs
-          v-model="tabActive"
-          tab-position="left"
-          @tab-click="handleTabClick"
-        >
-          <el-tab-pane label="阵营1" name="1"></el-tab-pane>
-          <el-tab-pane label="阵营2" name="2"></el-tab-pane>
-          <el-tab-pane label="阵营3" name="3"></el-tab-pane>
-        </el-tabs>
-      </div>
       <div
         class="left-tree flex-row"
         ref="leftTree"
@@ -29,11 +17,16 @@
             :style="{ width: `${leftPanelWidth}px` }"
             v-show="!isFold"
           >
-            <component
-              :is="currentComponent"
-              :active-name="activeName"
-              @changeView="changeView"
-            ></component>
+            <el-container direction="vertical">
+              <div class="left-title">环境部署</div>
+              <div class="">
+                <component
+                  :is="currentComponent"
+                  :active-name="activeName"
+                  @changeView="changeView"
+                ></component>
+              </div>
+            </el-container>
           </div>
           <div
             @mousedown="onHorizontalMousedown"
@@ -158,7 +151,7 @@ export default {
   },
   data() {
     return {
-      leftTabWidth: 80,
+      leftTabWidth: 0,
       leftTreeWidth: 500,
       wrapperInnerWidth: 1000,
       rightWidth: 420,
@@ -510,9 +503,9 @@ export default {
     }
     .left-tree {
       position: absolute;
-      left: 80px;
-      top: 0;
-      height: 100%;
+      left: 0;
+      top: 10px;
+      height: calc(100% - 10px);
 
       .left-container {
         position: relative;

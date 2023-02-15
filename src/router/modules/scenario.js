@@ -26,9 +26,9 @@ const scenarioRouter = {
     //   },
     // },
     {
-      path: 'step',
-      name: 'Step',
-      component: () => import('@/views/scenario/Step.vue'),
+      path: 'tab',
+      name: 'tab',
+      component: () => import('@/views/scenario/Tab.vue'),
       meta: {
         title: '想定基本信息'
       },

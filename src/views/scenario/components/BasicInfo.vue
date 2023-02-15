@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper form-box">
+  <div class="form-box">
     <el-form
       ref="form"
       :model="form"
@@ -19,11 +19,11 @@
       <el-form-item label="参考文档" prop="desc">
         <el-input type="textarea" v-model="form.desc"></el-input>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-button size="small" type="primary" @click="onSubmit('form')"
           >确 定</el-button
         >
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -108,6 +108,7 @@ export default {
 .wrapper {
   .form-box {
     width: 50%;
+    margin: 0 auto;
   }
 }
 </style>
