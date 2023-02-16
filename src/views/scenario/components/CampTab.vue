@@ -81,7 +81,7 @@
           ref="verticalResize"
         ></div>
         <div
-          class="bottom-component scroll-bar-style"
+          class="bottom-component"
           ref="bottomPanel"
           :style="{ height: `${bottomPanelHeight}px` }"
         >
@@ -89,7 +89,10 @@
             <div class="panel-tit-box flex-between">
               <div class="panel-title flex-start">
                 <span class="line"></span>
-                <span v-show="activeName == 2 || activeName == 6 || activeName == 7">{{ bottomPanelTitle }}</span>
+                <span
+                  v-show="activeName == 2 || activeName == 6 || activeName == 7"
+                  >{{ bottomPanelTitle }}</span
+                >
                 <span v-show="activeName == 4">{{ bottomPanelTitle1 }}</span>
               </div>
               <div class="fold-box2 pointer" @click="handleBottomFold">
@@ -109,8 +112,10 @@
                 </el-tooltip>
               </div>
             </div>
-            <div>
-              <environment-details v-show="activeName == 2 || activeName == 6 || activeName == 7"></environment-details>
+            <div class="panel-content scroll-bar-style">
+              <environment-details
+                v-show="activeName == 2 || activeName == 6 || activeName == 7"
+              ></environment-details>
               <deploy-details v-show="activeName == 4"></deploy-details>
             </div>
           </div>
@@ -154,7 +159,7 @@ const leftTitleArray = [
 ];
 const defaultLeftWidth = 300;
 export default {
-  name: "PowerFormation",
+  name: "CampTab",
   components: {
     DeployDetails,
     EnvironmentDetails,
@@ -622,10 +627,23 @@ export default {
       border: 1px solid #dcdfe6;
       border-radius: 4px;
       .bottom-component {
-        overflow-y: auto;
         padding: 10px;
         .bottom-inner {
+          position: relative;
           height: 100%;
+          .panel-tit-box {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+            width: 100%;
+            background-color: #fff;
+          }
+          .panel-content {
+            padding-top: 40px;
+            overflow-y: auto;
+            height: 100%;
+          }
         }
       }
     }

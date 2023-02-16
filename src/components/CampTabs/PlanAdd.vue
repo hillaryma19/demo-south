@@ -34,8 +34,39 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="目标" prop="target">
-          <el-input type="textarea" v-model="form.target"></el-input>
+        <el-form-item label="执行单位" prop="unit">
+          <el-radio-group v-model="form.unit">
+            <el-radio :label="1">编组</el-radio>
+            <el-radio :label="2">力量</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="">
+          <div class="form-tree">
+            <div v-show="form.unit == 1">
+              <el-tree
+                :data="treeData1"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                class="tree-line"
+                :indent="0"
+              >
+              </el-tree>
+              <!-- show-checkbox
+                @check-change="handleCheckChange1" -->
+            </div>
+            <div v-show="form.unit == 2">
+              <el-tree
+                :data="treeData2"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                class="tree-line"
+                :indent="0"
+              >
+              </el-tree>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -59,16 +90,141 @@ export default {
   },
   data() {
     return {
+      treeData2: [
+        {
+          label: "力量一级 1",
+          children: [
+            {
+              label: "力量二级 1-1",
+              children: [
+                {
+                  label: "力量三级 1-1-1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "力量一级 2",
+          children: [
+            {
+              label: "力量二级 2-1",
+              children: [
+                {
+                  label: "力量三级 2-1-1",
+                },
+              ],
+            },
+            {
+              label: "力量二级 2-2",
+              children: [
+                {
+                  label: "力量三级 2-2-1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "力量一级 3",
+          children: [
+            {
+              label: "力量二级 3-1",
+              children: [
+                {
+                  label: "力量三级 3-1-1",
+                },
+              ],
+            },
+            {
+              label: "力量二级 3-2",
+              children: [
+                {
+                  label: "力量三级 3-2-1",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      treeData1: [
+        {
+          label: "编组一级 1",
+          children: [
+            {
+              label: "编组二级 1-1",
+              children: [
+                {
+                  label: "编组三级 1-1-1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "编组一级 2",
+          children: [
+            {
+              label: "编组二级 2-1",
+              children: [
+                {
+                  label: "编组三级 2-1-1",
+                },
+              ],
+            },
+            {
+              label: "编组二级 2-2",
+              children: [
+                {
+                  label: "编组三级 2-2-1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "编组一级 3",
+          children: [
+            {
+              label: "编组二级 3-1",
+              children: [
+                {
+                  label: "编组三级 3-1-1",
+                },
+              ],
+            },
+            {
+              label: "编组二级 3-2",
+              children: [
+                {
+                  label: "编组三级 3-2-1",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      defaultProps: {
+        children: "children",
+        label: "label",
+      },
       form: {
         name: "",
         desc: "",
         region: "",
         daterange: "",
         target: "",
+        unit: 1,
       },
     };
   },
   methods: {
+    handleCheckChange1(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
+    },
+    handleCheckChange2(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
+    },
     handleDialogClose() {
       this.$emit("handleDialogInfo", false);
     },

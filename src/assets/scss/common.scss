@@ -241,10 +241,10 @@ html, body{
 /* position end */
 /* element-ui dialog 框样式修改 start */
   .el-dialog{
-    margin-top: 8vh !important;
+    margin-top: 6vh !important;
     .el-dialog__body{
       padding: 16px!important;
-      max-height: 74vh;
+      max-height: 70vh;
       overflow-y: auto;
     }
     .el-dialog__body::-webkit-scrollbar {
@@ -262,31 +262,43 @@ html, body{
     }
   }
 /* element-ui dialog 框样式修改 end */
-/* 推演状态 start */
-.s-status{
-  padding: 0 8px;
-  border-radius: 4px;
-  color: #FFFFFF;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-}
-.status_1{
+
+/* background color start */
+.bg-gray{
   background-color: #909399;
 }
-.status_2{
-  background-color: #13c2c2;
+.bg-theme{
+  background-color: $theme;
 }
-.status_3{
+.bg-success{
   background-color: #67C23A;
 }
-.status_4{
+.bg-danger{
   background-color: #F56C6C;
 }
-.status_5{
+.bg-warning{
   background-color: #E6A23C;
 }
-/* 推演状态 end */
+/* background color end */
+
+/* color start */
+.color-gray{
+  color: #909399;
+}
+.color-theme{
+  color: $theme;
+}
+.color-success{
+  color: #67C23A;
+}
+.color-danger{
+  color: #F56C6C;
+}
+.color-warning{
+  color: #E6A23C;
+}
+/* color end */
+
 .el-tooltip__popper.is-dark{
   max-width: 68%;
 }
@@ -295,6 +307,14 @@ html, body{
   width: 100%;
   height: 100%;
 }
+.el-tabs__item.is-active{
+  font-weight: 600;
+}
+.el-button--mini, .el-button--mini.is-round{
+  padding: 6px 14px;
+}
+
+/* tree start */
 .custom-tree-node {
   flex: 1;
   display: flex;
@@ -303,19 +323,12 @@ html, body{
   font-size: 14px;
   padding-right: 6px;
 }
-.el-tabs__item.is-active{
-  font-weight: 600;
-}
 .tree-label{
   display: inline-block;
   max-width: 180px;
   height: 26px;
   line-height: 26px;
 }
-.el-button--mini, .el-button--mini.is-round{
-  padding: 6px 14px;
-}
-
 //树节点前的虚线
 .tree-line{
   .el-tree-node {
@@ -335,7 +348,7 @@ html, body{
     left: -3px;
     top: -17px;
     border-width: 1px;
-    border-left: 1px dashed #52627C;
+    border-left: 1px dashed #C0C4CC;
   }
   // 当前层最后一个节点的竖线高度固定
   .el-tree-node:last-child::before {
@@ -377,3 +390,28 @@ html, body{
   height: 300px;
   overflow: auto;
 }
+/* tree end */
+
+/* gantt start */
+.gantt-icon {
+  font-size: 16px;
+  margin-left: 6px;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    opacity: 0.8;
+    color: $theme;
+  }
+}
+.gantt-btn{
+  font-size: 12px;
+  color: $theme;
+  transition: all 0.25s ease-in-out;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.gantt_tree_content {
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+/* gantt end */

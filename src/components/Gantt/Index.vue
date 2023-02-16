@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <div class="container" id="gantt" ref="gantt"></div>
+    <div class="gantt_container" id="gantt" ref="gantt"></div>
     <task-add
       :dialog-data="taskDialogData"
       @handleDialogInfo="getTaskDialogInfo"
@@ -179,6 +179,55 @@ export default {
     ganttInit() {
       const ganttContainer = this.$refs.gantt;
       const _this = this;
+      // let dateToStr = gantt.date.date_to_str(gantt.config.task_date);
+      // let markerId = gantt.addMarker({
+      //   start_date: new Date(),
+      //   css: "today", //标记样式，style中对应
+      //   text: "Today",
+      //   title: dateToStr(new Date()),
+      // });
+      const colContent = function (task) {
+        const renderType = task.$rendered_type;
+        if (renderType == "task") {
+          return '<i data-action="set" class="pointer gantt-btn">设置动作条件</i>';
+        } else {
+          return (
+            '<i data-action="edit1" class="pointer gantt-icon el-icon-edit"></i>' +
+            '<i data-action="add1" class="pointer gantt-icon el-icon-circle-plus-outline"></i>' +
+            '<i data-action="delete" class="pointer gantt-icon el-icon-remove-outline color-danger"></i>'
+          );
+        }
+      };
+      gantt.config.layout = {
+        css: "gantt_container",
+        cols: [
+          {
+            width: 670,
+            min_width: 300,
+            rows: [
+              {
+                view: "grid",
+                scrollX: "gridScroll",
+                scrollable: true,
+                scrollY: "scrollVer",
+              },
+
+              // horizontal scrollbar for the grid
+              { view: "scrollbar", id: "gridScroll", group: "horizontal" },
+            ],
+          },
+          { resizer: true, width: 1 },
+          {
+            rows: [
+              { view: "timeline", scrollX: "scrollHor", scrollY: "scrollVer" },
+
+              // horizontal scrollbar for the timeline
+              { view: "scrollbar", id: "scrollHor", group: "horizontal" },
+            ],
+          },
+          { view: "scrollbar", id: "scrollVer" },
+        ],
+      };
       //设置汉化
       gantt.i18n.setLocale("cn");
       gantt.plugins({
@@ -187,47 +236,112 @@ export default {
       gantt.plugins({
         marker: true,
       }); //标记当前日期
-      var dateToStr = gantt.date.date_to_str(gantt.config.task_date);
-      var markerId = gantt.addMarker({
-        start_date: new Date(),
-        css: "today", //标记样式，style中对应
-        text: "Today",
-        title: dateToStr(new Date()),
-      });
-      gantt.getMarker(markerId);
+      // gantt.getMarker(markerId);
       gantt.attachEvent("onTaskClick", function (id, e) {
-        console.log(id, e, "==id, e");
-        if (e.target.className == "gantt_tree_content") {
-          _this.taskDialogData.dialogVisible = true;
+        console.log(id, e.target, "==id, e");
+        const buttons = e.target.closest("[data-action]");
+        if (buttons) {
+          const action = buttons.getAttribute("data-action");
+          switch (action) {
+            case "edit1":
+              _this.taskDialogData.dialogVisible = true;
+              _this.taskDialogData.dialogType = 2;
+              break;
+            case "add1":
+              _this.taskDialogData.dialogVisible = true;
+              _this.taskDialogData.dialogType = 1;
+              break;
+            case "delete":
+              _this
+                .$confirm("确定要删除吗?", "提示", {
+                  confirmButtonText: "确定",
+                  cancelButtonText: "取消",
+                  type: "warning",
+                })
+                .then(() => {
+                  console.log("确定删除");
+                })
+                .cancel(() => {});
+              // gantt.confirm({
+              //   title: gantt.locale.labels.confirm_deleting_title,
+              //   text: gantt.locale.labels.confirm_deleting,
+              //   callback: function (res) {
+              //     if (res) gantt.deleteTask(id);
+              //   },
+              // });
+              break;
+            case "set":
+              _this.$router.push({
+                path: "/scenario/action",
+                query: { id: id },
+              });
+              break;
+          }
+          return false;
         }
         //any custom logic here
         return true;
       });
       gantt.config.columns = [
-        { name: "text", label: "任务名称", tree: true, width: "150" },
-        { name: "user", label: "执行编组", align: "center", width: "80" },
+        { name: "text", label: "计划名称", tree: true, width: "140" },
+        { name: "user", label: "执行单位", align: "center", width: "80" },
         {
           name: "content",
-          label: "方案 / 任务内容",
+          label: "计划内容",
           align: "center",
           width: "120",
         },
         { name: "start_date", label: "开始时间", align: "center", width: "80" },
         { name: "end_date", label: "结束时间", align: "center", width: "80" },
-        { name: "duration", label: "任务天数", align: "center", width: "60" },
+        { name: "end_date", label: "执行时间", align: "center", width: "80" },
+        {
+          name: "buttons",
+          label: "操作",
+          align: "center",
+          width: "90",
+          template: colContent,
+          // onrender: (item, node) => {
+          //   console.log(item, node, "==item, node");
+          //   return '<i class="pointer gantt-icon el-icon-edit"></i><i class="pointer gantt-icon el-icon-remove-outline"></i>';
+          // },
+        },
       ];
+
+      function clickGridButton(id, action) {
+        switch (action) {
+          case "edit":
+            gantt.showLightbox(id);
+            break;
+          case "add":
+            gantt.createTask(null, id);
+            break;
+          case "delete":
+            gantt.confirm({
+              title: gantt.locale.labels.confirm_deleting_title,
+              text: gantt.locale.labels.confirm_deleting,
+              callback: function (res) {
+                if (res) gantt.deleteTask(id);
+              },
+            });
+            break;
+        }
+      }
       gantt.init(ganttContainer);
       gantt.parse({ data: this.data, links: this.links });
     },
   },
   mounted() {
     this.clearAll();
-    this.ganttInit();
+    this.$nextTick(() => {
+      this.ganttInit();
+    });
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
+.gantt_container {
+  height: 100%;
+  width: 100%;
 }
 </style>

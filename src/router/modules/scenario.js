@@ -4,7 +4,7 @@ const scenarioRouter = {
   component: Layout,
   redirect: '/scenario/overview',
   meta: {
-    title: '想定基础信息',
+    title: '想定信息',
     icon: 'el-icon-s-flag'
   },
   children: [
@@ -30,7 +30,16 @@ const scenarioRouter = {
       name: 'tab',
       component: () => import('@/views/scenario/Tab.vue'),
       meta: {
-        title: '想定基本信息'
+        title: '想定'
+      },
+      hidden: true
+    },
+    {
+      path: 'action',
+      name: 'action',
+      component: () => import('@/views/scenario/Action.vue'),
+      meta: {
+        title: '设置动作条件'
       },
       hidden: true
     },
