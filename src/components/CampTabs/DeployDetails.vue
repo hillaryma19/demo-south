@@ -9,7 +9,7 @@
             <el-radio v-model="radio" label="1" style="margin-right: 30%;">设施</el-radio>
             <el-radio v-model="radio" label="2">力量</el-radio>
           </div>
-          <div class="place pad-tp-10">
+          <div class="place place-mar pad-tp-10">
             <div style="padding: 14% 0"  v-show="radio == 1">
             指挥所：
             <el-select size="small" v-model="location" placeholder="请选择">
@@ -37,27 +37,33 @@
           </div>
         </div>
         <div class="title pad-lt-10 rim">详情介绍</div>
-        <div class="ta-c">
+        <div class="place-mar">
           <div>11111</div>
           <div>111</div>
         </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
-          <div class="ta-c">
-            <el-form-item label="审批人:">
+          <div class="place-mar">
+            <el-form-item label="指挥者:">
               <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
             </el-form-item>
-            <el-form-item label="长度:">
+            <el-form-item label="船长度:">
               <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="高度:">
+              <div class="flex-start form-pad">
               <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
+                <span>米</span>
+              </div>
             </el-form-item>
             <el-form-item label="速度:">
+              <div class="flex-start form-pad">
               <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
+                <span>千米/h</span>
+              </div>
             </el-form-item>
           </div>
           <div class="title pad-lt-10 rim">经纬度</div>
-          <div class="ta-c">
+          <div class="place-mar">
             <el-form-item label="经度:">
               <el-input v-model="formInline.longitude" size="small" placeholder="审批人"></el-input>
             </el-form-item>
@@ -66,7 +72,7 @@
             </el-form-item>
           </div>
         <div class="title pad-lt-10 rim">指挥所人员</div>
-        <div class="ta-c tree-iframe flex-center scroll-bar-style">
+        <div class="place-mar tree-iframe flex-center scroll-bar-style">
           <el-tree
               :data="treeData"
               :props="defaultProps"
@@ -78,7 +84,7 @@
           </el-tree>
         </div>
         <div class="title pad-lt-10 rim">组织席位</div>
-        <div class="ta-c tree-iframe flex-center scroll-bar-style">
+        <div class="place-mar tree-iframe flex-center scroll-bar-style">
           <el-tree
               :data="treeData"
               :props="defaultProps"
@@ -416,9 +422,17 @@ export default {
 .rim{
   margin: 15px 0;
 }
+.form-pad{
+  span{
+    padding-left: 5px;
+    width: 26%;
+  }
+}
 .place{
-   border: 1px solid #bfbfbf;
-   margin: 0 5%;
+  border: 1px solid #bfbfbf;
   min-height: 260px;
+}
+.place-mar{
+  margin: 0 5%;
 }
 </style>
