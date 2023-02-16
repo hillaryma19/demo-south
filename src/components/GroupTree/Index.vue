@@ -23,17 +23,26 @@
           width="260"
           trigger="click"
         >
-          <el-button slot="reference" type="text">选择力量模板</el-button>
+          <el-button slot="reference" type="text"> 选择力量模板</el-button>
           <div>
-            <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              :expand-on-click-node="false"
-              default-expand-all
-              :indent="0"
-              class="tree-line"
+            <el-input
+              placeholder="请输入搜索内容"
+              suffix-icon="el-icon-search"
+              v-model="keyword"
+              size="small"
             >
-            </el-tree>
+            </el-input>
+            <div class="tree-iframe scroll-bar-style" style="margin-top: 10px">
+              <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                :indent="0"
+                class="tree-line"
+              >
+              </el-tree>
+            </div>
           </div>
         </el-popover>
       </div>

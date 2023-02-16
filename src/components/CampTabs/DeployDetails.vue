@@ -1,18 +1,20 @@
 <template>
   <div>
-    <el-tabs v-model="activeTabName" type="card" @tab-click="handleClick">
+    <el-tabs class="pad-tp-10" v-model="activeTabName" type="card" @tab-click="handleClick">
       <el-tab-pane label="指挥所" name="first">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <div class="title pad-lt-10">指挥所位置</div>
         <div class="ta-c">
           <div class="pad-bt-10">
-            <el-radio v-model="radio" label="1">设施</el-radio>
+            <el-radio v-model="radio" label="1" style="margin-right: 30%;">设施</el-radio>
             <el-radio v-model="radio" label="2">力量</el-radio>
           </div>
-          <div class="pad-bt-10" v-show="radio == 1">
+          <div class="place place-mar pad-tp-10">
+            <div style="padding: 10% 0"  v-show="radio == 1">
             指挥所：
             <el-select size="small" v-model="location" placeholder="请选择">
               <el-option
+                  z-index="0"
                   v-for="item in locationOptions"
                   :key="item.value"
                   :label="item.label"
@@ -21,7 +23,78 @@
               </el-option>
             </el-select>
           </div>
-          <div class="tree-iframe flex-center" v-show="radio == 2">
+            <div class="tree-iframe flex-center scroll-bar-style" v-show="radio == 2">
+              <el-tree
+                  :data="treeData"
+                  :props="defaultProps"
+                  :expand-on-click-node="false"
+                  default-expand-all
+                  class="tree-line"
+                  :indent="0"
+              >
+              </el-tree>
+            </div>
+          </div>
+        </div>
+        <div class="title pad-lt-10 rim">详情介绍</div>
+        <div class="place-mar flex-between">
+          <div>hfhfh</div>
+          <img width="200" height="250">
+        </div>
+          <div class="title pad-lt-10 rim">属性编辑</div>
+          <div class="place-mar flex-column">
+            <div>
+              <el-form-item label="指挥者:">
+                <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
+              </el-form-item>
+              <el-form-item label="船长度:">
+                <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
+              </el-form-item>
+            </div>
+            <div>
+              <el-form-item label="高度:">
+                <div class="flex-start form-pad">
+                  <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
+                  <span>米</span>
+                </div>
+              </el-form-item>
+              <el-form-item label="速度:">
+                <div class="flex-start form-pad">
+                  <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
+                  <span>千米/h</span>
+                </div>
+              </el-form-item>
+            </div>
+          </div>
+          <div class="title pad-lt-10 rim">经纬度</div>
+          <div class="place-mar">
+            <el-form-item label="经度:">
+              <el-input v-model="formInline.longitude" size="small" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="纬度:">
+              <el-input v-model="formInline.latitude" size="small" placeholder="审批人"></el-input>
+            </el-form-item>
+          </div>
+        <div class="title pad-lt-10 rim">指挥所人员</div>
+        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+             style="flex-wrap: nowrap;align-items: center;"
+        >
+          <el-input
+              placeholder="请输入搜索内容"
+              suffix-icon="el-icon-search"
+              v-model="people"
+              size="small"
+              style="width: 27%;"
+          >
+          </el-input>
+          <div style="margin-right: 8%">
+            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
+              <i
+                  class="pointer add-btn el-icon-circle-plus-outline"
+                  @click="handleAddMarshal(1)"
+                  style="font-size: 18px;padding-left:16px;"
+              ></i>
+            </el-tooltip>
             <el-tree
                 :data="treeData"
                 :props="defaultProps"
@@ -33,61 +106,39 @@
             </el-tree>
           </div>
         </div>
-        <div class="title pad-lt-10 rim">详情介绍</div>
-        <div class="ta-c">
-          <div>11111</div>
-          <div>111</div>
-        </div>
-          <div class="title pad-lt-10 rim">属性编辑</div>
-          <div class="ta-c">
-            <el-form-item label="审批人:">
-              <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="长度:">
-              <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="高度:">
-              <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="速度:">
-              <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-          </div>
-          <div class="title pad-lt-10 rim">经纬度</div>
-          <div class="ta-c">
-            <el-form-item label="经度:">
-              <el-input v-model="formInline.longitude" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="纬度:">
-              <el-input v-model="formInline.latitude" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-          </div>
-        <div class="title pad-lt-10 rim">指挥所人员</div>
-        <div class="ta-c tree-iframe flex-center">
-          <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              :expand-on-click-node="false"
-              default-expand-all
-              class="tree-line"
-              :indent="0"
-          >
-          </el-tree>
-        </div>
         <div class="title pad-lt-10 rim">组织席位</div>
-        <div class="ta-c tree-iframe flex-center">
-          <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              :expand-on-click-node="false"
-              default-expand-all
-              class="tree-line"
-              :indent="0"
+        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+             style="flex-wrap: nowrap;align-items: center;"
+        >
+          <el-input
+              placeholder="请输入搜索内容"
+              suffix-icon="el-icon-search"
+              v-model="people"
+              size="small"
+              style="width: 27%;"
           >
-          </el-tree>
+          </el-input>
+          <div style="margin-right: 8%">
+            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
+              <i
+                  class="pointer add-btn el-icon-circle-plus-outline"
+                  @click="handleAddMarshal(1)"
+                  style="font-size: 18px;padding-left:16px;"
+              ></i>
+            </el-tooltip>
+            <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                class="tree-line"
+                :indent="0"
+            >
+            </el-tree>
+          </div>
         </div>
         <div class="ta-c pad-tp-10 rim">
-          <el-button type="primary" >保存</el-button>
+          <el-button type="primary" size="small">保存</el-button>
         </div>
         </el-form>
       </el-tab-pane>
@@ -173,6 +224,7 @@ export default {
   },
   data(){
     return {
+      people: "",
       userDialogData: {
         dialogVisible: false,
         dialogType: 1, // 1：添加；2：编辑
@@ -412,5 +464,22 @@ export default {
 }
 .rim{
   margin: 15px 0;
+}
+.form-pad{
+  span{
+    padding-left: 5px;
+    width: 26%;
+    font-size: 14px;
+  }
+}
+.place{
+  border: 1px solid #bfbfbf;
+  min-height: 260px;
+}
+.place-mar{
+  margin: 0 5%;
+}
+.el-form-item{
+  margin-bottom: 15px;
 }
 </style>
