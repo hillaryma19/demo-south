@@ -10,13 +10,32 @@
       </el-input>
     </div>
     <div class="scroll-bar-style" ref="leftBox">
-      <div class="pad-bt-10">
+      <div class="pad-bt-10 flex-between" style="align-items: center;">
         <el-tooltip effect="dark" content="添加编组" placement="top">
           <i
             class="pointer add-btn el-icon-circle-plus-outline"
             @click="handleAddMarshal(1)"
           ></i>
         </el-tooltip>
+        <el-popover
+            placement="right-start"
+            title="力量模板库"
+            width="260"
+            trigger="click"
+        >
+          <el-button slot="reference" type="text">选择力量模板</el-button>
+          <div>
+            <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                :indent="0"
+                class="tree-line"
+            >
+            </el-tree>
+          </div>
+        </el-popover>
       </div>
       <el-tree
         ref="tree"
@@ -25,6 +44,8 @@
         :expand-on-click-node="false"
         default-expand-all
         :filter-node-method="filterNode"
+        :indent="0"
+        class="tree-line"
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>

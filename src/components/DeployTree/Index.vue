@@ -15,6 +15,8 @@
         :props="defaultProps"
         :expand-on-click-node="false"
         default-expand-all
+        :indent="0"
+        class="tree-line"
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
