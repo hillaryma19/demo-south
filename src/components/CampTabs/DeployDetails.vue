@@ -1,18 +1,20 @@
 <template>
   <div>
-    <el-tabs v-model="activeTabName" type="card" @tab-click="handleClick">
+    <el-tabs class="pad-tp-10" v-model="activeTabName" type="card" @tab-click="handleClick">
       <el-tab-pane label="指挥所" name="first">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <div class="title pad-lt-10">指挥所位置</div>
         <div class="ta-c">
           <div class="pad-bt-10">
-            <el-radio v-model="radio" label="1">设施</el-radio>
+            <el-radio v-model="radio" label="1" style="margin-right: 30%;">设施</el-radio>
             <el-radio v-model="radio" label="2">力量</el-radio>
           </div>
-          <div class="pad-bt-10" v-show="radio == 1">
+          <div class="place pad-tp-10">
+            <div style="padding: 14% 0"  v-show="radio == 1">
             指挥所：
             <el-select size="small" v-model="location" placeholder="请选择">
               <el-option
+                  z-index="0"
                   v-for="item in locationOptions"
                   :key="item.value"
                   :label="item.label"
@@ -21,16 +23,17 @@
               </el-option>
             </el-select>
           </div>
-          <div class="tree-iframe flex-center" v-show="radio == 2">
-            <el-tree
-                :data="treeData"
-                :props="defaultProps"
-                :expand-on-click-node="false"
-                default-expand-all
-                class="tree-line"
-                :indent="0"
-            >
-            </el-tree>
+            <div class="tree-iframe flex-center scroll-bar-style" v-show="radio == 2">
+              <el-tree
+                  :data="treeData"
+                  :props="defaultProps"
+                  :expand-on-click-node="false"
+                  default-expand-all
+                  class="tree-line"
+                  :indent="0"
+              >
+              </el-tree>
+            </div>
           </div>
         </div>
         <div class="title pad-lt-10 rim">详情介绍</div>
@@ -63,7 +66,7 @@
             </el-form-item>
           </div>
         <div class="title pad-lt-10 rim">指挥所人员</div>
-        <div class="ta-c tree-iframe flex-center">
+        <div class="ta-c tree-iframe flex-center scroll-bar-style">
           <el-tree
               :data="treeData"
               :props="defaultProps"
@@ -75,7 +78,7 @@
           </el-tree>
         </div>
         <div class="title pad-lt-10 rim">组织席位</div>
-        <div class="ta-c tree-iframe flex-center">
+        <div class="ta-c tree-iframe flex-center scroll-bar-style">
           <el-tree
               :data="treeData"
               :props="defaultProps"
@@ -87,7 +90,7 @@
           </el-tree>
         </div>
         <div class="ta-c pad-tp-10 rim">
-          <el-button type="primary" >保存</el-button>
+          <el-button type="primary" size="small">保存</el-button>
         </div>
         </el-form>
       </el-tab-pane>
@@ -412,5 +415,10 @@ export default {
 }
 .rim{
   margin: 15px 0;
+}
+.place{
+   border: 1px solid #bfbfbf;
+   margin: 0 5%;
+  min-height: 260px;
 }
 </style>

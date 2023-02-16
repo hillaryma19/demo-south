@@ -23,8 +23,16 @@
             width="260"
             trigger="click"
         >
-          <el-button slot="reference" type="text">选择力量模板</el-button>
+          <el-button slot="reference" type="text">
+            选择力量模板</el-button>
           <div>
+            <el-input
+                placeholder="请输入搜索内容"
+                suffix-icon="el-icon-search"
+                v-model="keyword"
+                size="small"
+            >
+            </el-input>
             <el-tree
                 :data="treeData"
                 :props="defaultProps"
