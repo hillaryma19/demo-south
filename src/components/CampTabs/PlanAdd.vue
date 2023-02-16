@@ -7,18 +7,23 @@
   >
     <div class="dialog-content">
       <el-form ref="form" :model="form" label-width="100px" size="small">
-        <el-form-item label="任务标题" prop="name">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="任务名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入计划名称"></el-input>
         </el-form-item>
         <el-form-item label="任务内容" prop="desc">
-          <el-input type="textarea" v-model="form.desc" :rows="4"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form.desc"
+            placeholder="请输入任务内容"
+            :rows="4"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="执行编组" prop="region">
+        <!-- <el-form-item label="执行编组" prop="region">
           <el-select v-model="form.region" placeholder="请选择执行编组">
             <el-option label="编组一" value="shanghai"></el-option>
             <el-option label="编组二" value="beijing"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="任务时间" prop="daterange">
           <el-date-picker
             v-model="form.daterange"

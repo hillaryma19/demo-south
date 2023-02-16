@@ -7,11 +7,7 @@
         :height="drawerData.drawerHeight"
       ></Map>
       <!-- 左侧 -->
-      <div
-        class="left-tree flex-row"
-        ref="leftTree"
-        :style="{ left: `${leftTabWidth}px` }"
-      >
+      <div class="left-tree flex-row" ref="leftTree">
         <div class="left-container">
           <div
             class="left-component"
@@ -20,11 +16,13 @@
             v-show="!isLtFold"
           >
             <el-container direction="vertical" style="height: 100%">
+              <!-- 左侧 title -->
               <div class="panel-tit-box pad-tp-10">
                 <div class="panel-title flex-start">
                   <span class="line"></span><span>{{ leftTitle }}</span>
                 </div>
               </div>
+              <!-- 左侧 组件 -->
               <div class="" style="flex: 1">
                 <component
                   :is="currentComponent"
@@ -146,6 +144,7 @@ const leftTitleArray = [
   "想定编组",
   "计划任务",
 ];
+const defaultLeftWidth = 300;
 export default {
   name: "PowerFormation",
   components: {
@@ -302,6 +301,7 @@ export default {
         case "2":
           component = "Environment";
           this.leftTitle = leftTitleArray[0];
+          this.leftPanelWidth = defaultLeftWidth;
           break;
         // case "3":
         //   component = "Environment";
@@ -309,19 +309,23 @@ export default {
         //   break;
         case "4":
           component = "GroupTree";
+          this.leftPanelWidth = defaultLeftWidth;
           this.leftTitle = leftTitleArray[3];
           break;
         case "5":
-          component = "GroupTree";
+          component = "Plan";
+          this.leftPanelWidth = this.wrapperInnerWidth - 8;
           this.leftTitle = leftTitleArray[4];
           break;
         case "6":
           component = "GroupTree";
           this.leftTitle = leftTitleArray[1];
+          this.leftPanelWidth = defaultLeftWidth;
           break;
         case "7":
           component = "DeploymentTree";
           this.leftTitle = leftTitleArray[2];
+          this.leftPanelWidth = defaultLeftWidth;
           break;
         default:
           break;
@@ -347,22 +351,17 @@ export default {
     onWindowResize() {
       this.$nextTick(() => {
         let wrapperInner = this.$refs.wrapperInner,
-          leftTab = this.$refs.tabsContainer,
           leftTree = this.$refs.leftTree;
 
         if (wrapperInner) {
-          this.drawerData.drawerHeight = wrapperInner.offsetHeight - 4;
+          this.drawerData.drawerHeight = wrapperInner.offsetHeight;
           this.wrapperInnerWidth = wrapperInner.offsetWidth;
           this.wrapperInnerHeight = wrapperInner.offsetHeight;
-        }
-        if (leftTab) {
-          this.leftTabWidth = leftTab.offsetWidth;
         }
         if (leftTree) {
           this.leftTreeWidth = leftTree.offsetWidth;
         }
-        this.bottomPanelWidth =
-          this.wrapperInnerWidth - this.leftTabWidth - this.leftTreeWidth - 10;
+        this.bottomPanelWidth = this.wrapperInnerWidth - this.leftTreeWidth - 8;
       });
     },
     // 点击添加
@@ -428,7 +427,7 @@ export default {
     onHorizontalResizeMouseup() {
       let leftPanelDom = this.$refs.leftBox,
         panelWidth = leftPanelDom.offsetWidth || 0,
-        maxWidth = this.wrapperInnerWidth,
+        maxWidth = this.wrapperInnerWidth - 8,
         minWidth = 120;
       this.isHorizontalResize = false;
       this.leftPanelWidth = panelWidth + this.horizontalResizeX.end;
@@ -558,7 +557,7 @@ export default {
       position: absolute;
       left: 0;
       top: 10px;
-      height: calc(100% - 10px);
+      height: calc(100% - 8px);
       border: 1px solid #dcdfe6;
       border-radius: 4px;
       .left-container {
