@@ -37,9 +37,9 @@
           </div>
         </div>
         <div class="title pad-lt-10 rim">详情介绍</div>
-        <div class="place-mar">
-          <div>11111</div>
-          <div>111</div>
+        <div class="place-mar flex-between">
+          <div>hfhfh</div>
+          <img width="200" height="250">
         </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
           <div class="place-mar flex-column">
@@ -469,6 +469,7 @@ export default {
   span{
     padding-left: 5px;
     width: 26%;
+    font-size: 14px;
   }
 }
 .place{

@@ -88,9 +88,9 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button size="small" @click="handleDialogClose">取 消</el-button>
-      <el-button size="small" type="primary" @click="onSubmit('form')"
-        >确 定</el-button
-      >
+      <el-button size="small" type="primary" @click="onSubmit('form')">
+        确 定
+      </el-button>
     </span>
   </el-dialog>
 </template>
