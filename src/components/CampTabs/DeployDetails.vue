@@ -76,28 +76,66 @@
             </el-form-item>
           </div>
         <div class="title pad-lt-10 rim">指挥所人员</div>
-        <div class="place-mar tree-iframe flex-center scroll-bar-style">
-          <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              :expand-on-click-node="false"
-              default-expand-all
-              class="tree-line"
-              :indent="0"
+        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+             style="flex-wrap: nowrap;align-items: center;"
+        >
+          <el-input
+              placeholder="请输入搜索内容"
+              suffix-icon="el-icon-search"
+              v-model="people"
+              size="small"
+              style="width: 27%;"
           >
-          </el-tree>
+          </el-input>
+          <div style="margin-right: 8%">
+            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
+              <i
+                  class="pointer add-btn el-icon-circle-plus-outline"
+                  @click="handleAddMarshal(1)"
+                  style="font-size: 18px;padding-left:16px;"
+              ></i>
+            </el-tooltip>
+            <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                class="tree-line"
+                :indent="0"
+            >
+            </el-tree>
+          </div>
         </div>
         <div class="title pad-lt-10 rim">组织席位</div>
-        <div class="place-mar tree-iframe flex-center scroll-bar-style">
-          <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              :expand-on-click-node="false"
-              default-expand-all
-              class="tree-line"
-              :indent="0"
+        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+             style="flex-wrap: nowrap;align-items: center;"
+        >
+          <el-input
+              placeholder="请输入搜索内容"
+              suffix-icon="el-icon-search"
+              v-model="people"
+              size="small"
+              style="width: 27%;"
           >
-          </el-tree>
+          </el-input>
+          <div style="margin-right: 8%">
+            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
+              <i
+                  class="pointer add-btn el-icon-circle-plus-outline"
+                  @click="handleAddMarshal(1)"
+                  style="font-size: 18px;padding-left:16px;"
+              ></i>
+            </el-tooltip>
+            <el-tree
+                :data="treeData"
+                :props="defaultProps"
+                :expand-on-click-node="false"
+                default-expand-all
+                class="tree-line"
+                :indent="0"
+            >
+            </el-tree>
+          </div>
         </div>
         <div class="ta-c pad-tp-10 rim">
           <el-button type="primary" size="small">保存</el-button>
@@ -186,6 +224,7 @@ export default {
   },
   data(){
     return {
+      people: "",
       userDialogData: {
         dialogVisible: false,
         dialogType: 1, // 1：添加；2：编辑
