@@ -19,6 +19,8 @@
         show-checkbox
         :default-checked-keys="[4]"
         @check-change="handleCheckChange"
+        class="tree-line"
+        :indent="0"
       ></el-tree>
       <!-- <el-form
         ref="form"

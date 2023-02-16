@@ -90,7 +90,9 @@
           <div class="bottom-inner">
             <div class="panel-tit-box flex-between">
               <div class="panel-title flex-start">
-                <span class="line"></span><span>{{ bottomPanelTitle }}</span>
+                <span class="line"></span>
+                <span v-show="activeName == 2 || activeName == 6 || activeName == 7">{{ bottomPanelTitle }}</span>
+                <span v-show="activeName == 4">{{ bottomPanelTitle1 }}</span>
               </div>
               <div class="fold-box2 pointer" @click="handleBottomFold">
                 <el-tooltip
@@ -109,6 +111,10 @@
                 </el-tooltip>
               </div>
             </div>
+            <div>
+              <environment-details v-show="activeName == 2 || activeName == 6 || activeName == 7"></environment-details>
+              <deploy-details v-show="activeName == 4"></deploy-details>
+            </div>
           </div>
         </div>
       </div>
@@ -125,6 +131,8 @@
 </template>
 
 <script>
+import EnvironmentDetails from "@/components/CampTabs/EnvironmentDetails";
+import DeployDetails from "@/components/CampTabs/DeployDetails";
 const FormationTree = () => import("@/components/CampTabs/FormationTree.vue");
 const DeploymentTree = () => import("@/components/CampTabs/DeploymentTree.vue");
 const GroupPower = () => import("@/components/CampTabs/GroupPower.vue");
@@ -149,6 +157,8 @@ const leftTitleArray = [
 export default {
   name: "PowerFormation",
   components: {
+    DeployDetails,
+    EnvironmentDetails,
     RightPanel,
     PowerAdd,
     FormationTree,
@@ -280,6 +290,7 @@ export default {
       splitterVerticalMoveY: 0,
       leftTitle: leftTitleArray[0],
       bottomPanelTitle: "实体属性编辑",
+      bottomPanelTitle1: "编组详情",
     };
   },
   created() {
