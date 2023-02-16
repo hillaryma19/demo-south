@@ -78,7 +78,7 @@
       </el-form-item>
     </div>
     <div class="ta-c pad-tp-10">
-      <el-button type="primary" >保存</el-button>
+      <el-button type="primary" size="small">保存</el-button>
     </div>
   </el-form>
 </template>
@@ -119,6 +119,9 @@ export default {
     padding-left: 5px;
     width: 26%;
   }
+}
+.el-form-item{
+  margin-bottom: 15px;
 }
 .place-mar{
   margin: 0 5%;

@@ -10,7 +10,7 @@
             <el-radio v-model="radio" label="2">力量</el-radio>
           </div>
           <div class="place place-mar pad-tp-10">
-            <div style="padding: 14% 0"  v-show="radio == 1">
+            <div style="padding: 10% 0"  v-show="radio == 1">
             指挥所：
             <el-select size="small" v-model="location" placeholder="请选择">
               <el-option
@@ -42,25 +42,29 @@
           <div>111</div>
         </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
-          <div class="place-mar">
-            <el-form-item label="指挥者:">
-              <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="船长度:">
-              <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="高度:">
-              <div class="flex-start form-pad">
-              <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
-                <span>米</span>
-              </div>
-            </el-form-item>
-            <el-form-item label="速度:">
-              <div class="flex-start form-pad">
-              <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
-                <span>千米/h</span>
-              </div>
-            </el-form-item>
+          <div class="place-mar flex-column">
+            <div>
+              <el-form-item label="指挥者:">
+                <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
+              </el-form-item>
+              <el-form-item label="船长度:">
+                <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
+              </el-form-item>
+            </div>
+            <div>
+              <el-form-item label="高度:">
+                <div class="flex-start form-pad">
+                  <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
+                  <span>米</span>
+                </div>
+              </el-form-item>
+              <el-form-item label="速度:">
+                <div class="flex-start form-pad">
+                  <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
+                  <span>千米/h</span>
+                </div>
+              </el-form-item>
+            </div>
           </div>
           <div class="title pad-lt-10 rim">经纬度</div>
           <div class="place-mar">
@@ -434,5 +438,8 @@ export default {
 }
 .place-mar{
   margin: 0 5%;
+}
+.el-form-item{
+  margin-bottom: 15px;
 }
 </style>

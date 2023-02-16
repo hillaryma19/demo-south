@@ -33,15 +33,17 @@
                 size="small"
             >
             </el-input>
-            <el-tree
-                :data="treeData"
-                :props="defaultProps"
-                :expand-on-click-node="false"
-                default-expand-all
-                :indent="0"
-                class="tree-line"
-            >
-            </el-tree>
+            <div class="tree-iframe scroll-bar-style" style="margin-top: 10px;">
+              <el-tree
+                  :data="treeData"
+                  :props="defaultProps"
+                  :expand-on-click-node="false"
+                  default-expand-all
+                  :indent="0"
+                  class="tree-line"
+              >
+              </el-tree>
+            </div>
           </div>
         </el-popover>
       </div>
