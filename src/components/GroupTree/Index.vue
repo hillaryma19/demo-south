@@ -10,7 +10,7 @@
       </el-input>
     </div>
     <div class="scroll-bar-style" ref="leftBox">
-      <div class="flex-between" style="align-items: center">
+      <div class="pad-bt-10 flex-between" style="align-items: center;">
         <el-tooltip effect="dark" content="添加编组" placement="top">
           <i
             class="pointer add-btn el-icon-circle-plus-outline"
@@ -32,7 +32,7 @@
               size="small"
             >
             </el-input>
-            <div class="tree-iframe scroll-bar-style" style="margin-top: 10px">
+            <div class="tree-iframe scroll-bar-style" style="margin-top: 10px;height: 64%">
               <el-tree
                 :data="treeData"
                 :props="defaultProps"

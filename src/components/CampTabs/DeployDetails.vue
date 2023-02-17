@@ -11,28 +11,37 @@
           <div class="title pad-lt-10">指挥所位置</div>
           <div class="ta-c">
             <div class="pad-bt-10">
-              <el-radio v-model="radio" label="1" style="margin-right: 30%"
-                >设施</el-radio
-              >
-              <el-radio v-model="radio" label="2">力量</el-radio>
-            </div>
-            <div class="place place-mar pad-tp-10">
-              <div style="padding: 10% 0" v-show="radio == 1">
-                指挥所：
-                <el-select size="small" v-model="location" placeholder="请选择">
-                  <el-option
-                    z-index="0"
-                    v-for="item in locationOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+              <el-form-item label="">
+                <el-radio-group v-model="formInline.radio">
+                  <el-radio :label="1" style="margin-right: 250px"
+                    >设施</el-radio
                   >
-                  </el-option>
-                </el-select>
+                  <el-radio :label="2">力量</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </div>
+            <div class="place place-mar pad-tp-10 pad-bt-10">
+              <div style="padding: 10% 0" v-show="formInline.radio == 1">
+                <el-form-item label=" 指挥所:">
+                  <el-select
+                    size="small"
+                    v-model="formInline.location"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      z-index="0"
+                      v-for="item in locationOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
               </div>
               <div
                 class="tree-iframe flex-center scroll-bar-style"
-                v-show="radio == 2"
+                v-show="formInline.radio == 2"
               >
                 <el-tree
                   :data="treeData"
@@ -48,8 +57,8 @@
           </div>
           <div class="title pad-lt-10 rim">详情介绍</div>
           <div class="place-mar flex-between">
-            <div>hfhfh</div>
-            <img width="200" height="250" />
+            <div>{{ formInline.sketch }}</div>
+            <img :src="formInline.deImg" width="200" height="250" />
           </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
           <div class="place-mar flex-column">
@@ -203,7 +212,7 @@
         <el-table
           :data="tableData"
           :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-          size="small"
+          size="mini"
           border
           align="center"
           highlight-current-row
@@ -358,7 +367,6 @@ export default {
           label: "紫竹院",
         },
       ],
-      location: "",
       dialogData: {
         dialogVisible: false,
         dialogType: 1, // 1：添加；2：编辑
@@ -400,14 +408,20 @@ export default {
       ],
       tableHeight: 260,
       activeTabName: "first",
-      radio: "1",
       formInline: {
+        radio: 1,
+        location: "",
+        physical: "", //力量
+        sketch: "dsfsfsfs", //简述
+        deImg: "", //图片
         user: "",
         shipLength: "",
         height: "",
         spend: "",
         longitude: "",
         latitude: "",
+        personnel: "", //人员
+        conference: "", //席位
       },
     };
   },
