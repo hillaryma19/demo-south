@@ -15,17 +15,18 @@
           </div>
           <div class="place place-mar pad-tp-10 pad-bt-10">
             <div style="padding: 10% 0"  v-show="formInline.radio == 1">
-            指挥所：
-            <el-select size="small" v-model="formInline.location" placeholder="请选择">
-              <el-option
+             <el-form-item label=" 指挥所:">
+              <el-select size="small" v-model="formInline.location" placeholder="请选择">
+               <el-option
                   z-index="0"
                   v-for="item in locationOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
-              >
-              </el-option>
-            </el-select>
+               >
+               </el-option>
+               </el-select>
+              </el-form-item>
           </div>
             <div class="tree-iframe flex-center scroll-bar-style" v-show="formInline.radio == 2">
               <el-tree
