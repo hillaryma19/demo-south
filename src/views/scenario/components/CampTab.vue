@@ -302,13 +302,15 @@ export default {
     this.addKeyEventListener();
   },
   mounted() {
-    console.log(this.activeName, "==this.activeName");
-    this.$nextTick(() => {
-      this.handleActiveName(this.activeName);
-      window.onresize = () => {
-        this.handleActiveName(this.activeName);
-      };
-    });
+    const _this = this;
+    setTimeout(() => {
+      _this.$nextTick(() => {
+        _this.handleActiveName(_this.activeName);
+        window.onresize = () => {
+          _this.handleActiveName(_this.activeName);
+        };
+      });
+    }, 100);
   },
   methods: {
     handleActiveName(val) {

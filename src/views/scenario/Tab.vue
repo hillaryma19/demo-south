@@ -46,10 +46,10 @@ export default {
     if (querys && querys.activeName) {
       this.activeName = querys.activeName;
     }
-    console.log(3322);
+    this.handleTabClick({ name: this.activeName });
   },
   methods: {
-    handleTabClick(tab, type) {
+    handleTabClick(tab) {
       let name = tab.name,
         component = "";
       switch (name) {
@@ -78,6 +78,10 @@ export default {
           break;
       }
       this.currentComponent = component;
+      this.$router.push({
+        path: "/scenario/tab",
+        query: { activeName: this.activeName },
+      });
     },
     changeView(view, item) {
       console.log(view, item, "==view, item");

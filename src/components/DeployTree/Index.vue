@@ -23,7 +23,7 @@
           <span v-if="!data.children">
             <el-button
               type="primary"
-              size="small"
+              size="mini"
               plain
               @click="() => handleDeploy(data)"
             >

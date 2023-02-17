@@ -1,10 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%">
     <div class="gantt_container" id="gantt" ref="gantt"></div>
-    <task-add
-      :dialog-data="taskDialogData"
-      @handleDialogInfo="getTaskDialogInfo"
-    ></task-add>
   </div>
 </template>
 
@@ -12,16 +8,10 @@
 import { gantt } from "dhtmlx-gantt";
 import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
 import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_meadow.css";
-const TaskAdd = () => import("@/components/CampTabs/TaskAdd.vue");
 export default {
   name: "DhtmlxGantt",
-  components: { TaskAdd },
   data() {
     return {
-      taskDialogData: {
-        dialogVisible: false,
-        dialogType: 1, // 1：添加；2：编辑
-      },
       data: [
         {
           id: 11,
@@ -170,22 +160,14 @@ export default {
     };
   },
   methods: {
-    getTaskDialogInfo() {
-      this.taskDialogData.dialogVisible = false;
-    },
     clearAll() {
       gantt.clearAll();
     },
     ganttInit() {
       const ganttContainer = this.$refs.gantt;
       const _this = this;
-      // let dateToStr = gantt.date.date_to_str(gantt.config.task_date);
-      // let markerId = gantt.addMarker({
-      //   start_date: new Date(),
-      //   css: "today", //标记样式，style中对应
-      //   text: "Today",
-      //   title: dateToStr(new Date()),
-      // });
+      let dateToStr = gantt.date.date_to_str(gantt.config.task_date),
+        markerId = null;
       const colContent = function (task) {
         const renderType = task.$rendered_type;
         if (renderType == "task") {
@@ -197,6 +179,14 @@ export default {
             '<i data-action="delete" class="pointer gantt-icon el-icon-remove-outline color-danger"></i>'
           );
         }
+      };
+      const weekScaleTemplate = function (date) {
+        let dateToStr = gantt.date.date_to_str("%M-%d"),
+          weekNum = gantt.date.date_to_str("(第%W周)"),
+          endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+        return (
+          dateToStr(date) + "日 ~ " + dateToStr(endDate) + "日 " + weekNum(date)
+        );
       };
       gantt.config.layout = {
         css: "gantt_container",
@@ -236,6 +226,57 @@ export default {
       gantt.plugins({
         marker: true,
       }); //标记当前日期
+      markerId = gantt.addMarker({
+        start_date: new Date(),
+        css: "today", //标记样式，style中对应
+        text: "Today",
+        title: dateToStr(new Date()),
+      });
+      gantt.getMarker(markerId);
+      gantt.config.start_on_monday = true;
+      gantt.config.order_branch = true;
+      gantt.config.fit_tasks = true;
+      gantt.config.min_column_width = 18;
+      gantt.config.duration_step = 1;
+      // gantt.config.time_step = 15;
+      gantt.config.duration_unit = "minute";
+      gantt.config.scales = [
+        // https://docs.dhtmlx.com/gantt/desktop__date_format.html
+        // { unit: "year", date: " %Y年" },
+        { unit: "month", step: 1, format: "%Y年%m月" },
+        {
+          unit: "week",
+          step: 1,
+          format: weekScaleTemplate,
+        },
+        // the day as a full name ( Sunday to Saturday );  / %l
+        {
+          unit: "day",
+          step: 1,
+          format: "%d / %D",
+          css: function (date) {
+            if (!gantt.isWorkTime({ date: date, unit: "day" })) {
+              return "weekend";
+            }
+          },
+        },
+        { unit: "hour", step: 1, format: "%H" },
+      ];
+      gantt.config.inherit_scale_class = true;
+      gantt.config.scale_height = 50; //设置时间刻度的高度和网格的标题
+      gantt.templates.scale_cell_class = function (date) {
+        if (date.getDay() == 0 || date.getDay() == 6) {
+          return "weekend";
+        }
+      };
+      gantt.templates.timeline_cell_class = function (task, date) {
+        if (date.getDay() == 0 || date.getDay() == 6) {
+          return "weekend";
+        }
+      };
+      // gantt.templates.task_row_class = function (start, end, task) {
+      //   if (gantt.isSelectedTask(task.id)) return "gantt_selected";
+      // };
       // gantt.getMarker(markerId);
       gantt.attachEvent("onTaskClick", function (id, e) {
         console.log(id, e.target, "==id, e");
@@ -244,13 +285,9 @@ export default {
           const action = buttons.getAttribute("data-action");
           switch (action) {
             case "edit1":
-              // _this.taskDialogData.dialogVisible = true;
-              // _this.taskDialogData.dialogType = 2;
               _this.$emit("onTaskClick", { type: 2, id: id });
               break;
             case "add1":
-              // _this.taskDialogData.dialogVisible = true;
-              // _this.taskDialogData.dialogType = 1;
               _this.$emit("onTaskClick", { type: 1, id: id });
               break;
             case "delete":
@@ -345,5 +382,13 @@ export default {
 .gantt_container {
   height: 100%;
   width: 100%;
+  ::v-deep .weekend {
+    background-color: rgba(173, 216, 230, 0.2);
+  }
+  ::v-deep .gantt_task_row {
+    .weekend {
+      background-color: rgba(173, 216, 230, 0.2);
+    }
+  }
 }
 </style>

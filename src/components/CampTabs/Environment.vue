@@ -6,9 +6,8 @@
           :data="tableData"
           :height="tableHeight"
           :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-          size="small"
           border
-          align="center"
+          size="small"
           highlight-current-row
           tooltip-effect="dark"
           v-loading="loading"
@@ -17,15 +16,27 @@
           element-loading-background="rgba(0, 0, 0, 0.8)"
           style="width: 100%"
         >
-          <el-table-column prop="date" label="设施名称" min-width="60">
+          <el-table-column
+            align="center"
+            show-overflow-tooltip
+            prop="date"
+            label="设施名称"
+            min-width="70"
+          >
           </el-table-column>
-          <el-table-column prop="name" label="设施描述" min-width="80">
+          <el-table-column
+            align="center"
+            show-overflow-tooltip
+            prop="name"
+            label="设施描述"
+            min-width="70"
+          >
           </el-table-column>
-          <el-table-column label="操作" min-width="50">
+          <el-table-column align="center" label="操作" min-width="50">
             <template slot-scope="scope">
               <el-button
                 type="text"
-                size="small"
+                size="mini"
                 @click="handleDeploy(scope.row)"
                 >部署</el-button
               >
