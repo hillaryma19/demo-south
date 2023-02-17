@@ -23,7 +23,7 @@
     <el-table
       :data="tableData"
       :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-      size="mini"
+      size="small"
       border
       align="center"
       highlight-current-row

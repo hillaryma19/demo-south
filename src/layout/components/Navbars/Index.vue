@@ -147,7 +147,7 @@ export default {
         //   position: absolute;
         //   right: -20px;
         //   top: 25px;
-        //   font-size: 12px;
+        //   font-size: 14px;
         // }
       }
     }

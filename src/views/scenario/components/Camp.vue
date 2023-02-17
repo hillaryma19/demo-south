@@ -91,7 +91,7 @@
                   <el-select
                     v-else
                     :value="index"
-                    size="mini"
+                    size="small"
                     v-model="child.name"
                     placeholder="请选择"
                     @change="
@@ -267,7 +267,7 @@ export default {
     */
         arr2.splice(0, i + 1);
         for (var j = 0, len2 = arr2.length; j < len2; j++) {
-          console.log(array[i].name + " " + arr2[j].name);
+          // console.log(array[i].name + " " + arr2[j].name);
         }
         if (arr2.length) {
           this.dynamicTags[i].children = arr2;
@@ -283,7 +283,7 @@ export default {
           item.children.unshift({ relationship: "--" });
         }
       });
-      console.log(this.dynamicTags, "--000this.dynamicTags");
+      // console.log(this.dynamicTags, "--000this.dynamicTags");
       this.dynamicTags.forEach((item) => {
         let children = item.children;
         item.children.forEach((child) => {
@@ -291,7 +291,7 @@ export default {
             value: "",
             options: this.relationshipOptions,
           };
-          console.log(child);
+          // console.log(child);
           // console.log(child.relationship, "==999");
           // if (!child.relationship) {
           //   child.relationship = "4";
@@ -575,7 +575,7 @@ export default {
     height: 32px;
     padding: 0 10px;
     line-height: 30px;
-    font-size: 12px;
+    font-size: 14px;
     color: #409eff;
     border-width: 1px;
     border-style: solid;
@@ -587,7 +587,7 @@ export default {
       text-align: center;
       position: relative;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 14px;
       height: 16px;
       width: 16px;
       line-height: 16px;

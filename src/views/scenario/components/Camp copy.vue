@@ -654,7 +654,7 @@ export default {
     height: 32px;
     padding: 0 10px;
     line-height: 30px;
-    font-size: 12px;
+    font-size: 14px;
     color: #409eff;
     border-width: 1px;
     border-style: solid;
@@ -666,7 +666,7 @@ export default {
       text-align: center;
       position: relative;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 14px;
       height: 16px;
       width: 16px;
       line-height: 16px;

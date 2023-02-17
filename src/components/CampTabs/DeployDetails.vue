@@ -1,66 +1,92 @@
 <template>
   <div>
-    <el-tabs class="pad-tp-10" v-model="activeTabName" type="card" @tab-click="handleClick">
+    <el-tabs
+      class="pad-tp-10"
+      v-model="activeTabName"
+      type="card"
+      @tab-click="handleClick"
+    >
       <el-tab-pane label="指挥所" name="first">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <div class="title pad-lt-10">指挥所位置</div>
-        <div class="ta-c">
-          <div class="pad-bt-10">
-            <el-radio v-model="radio" label="1" style="margin-right: 30%;">设施</el-radio>
-            <el-radio v-model="radio" label="2">力量</el-radio>
-          </div>
-          <div class="place place-mar pad-tp-10">
-            <div style="padding: 10% 0"  v-show="radio == 1">
-            指挥所：
-            <el-select size="small" v-model="location" placeholder="请选择">
-              <el-option
-                  z-index="0"
-                  v-for="item in locationOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+          <div class="title pad-lt-10">指挥所位置</div>
+          <div class="ta-c">
+            <div class="pad-bt-10">
+              <el-radio v-model="radio" label="1" style="margin-right: 30%"
+                >设施</el-radio
               >
-              </el-option>
-            </el-select>
-          </div>
-            <div class="tree-iframe flex-center scroll-bar-style" v-show="radio == 2">
-              <el-tree
+              <el-radio v-model="radio" label="2">力量</el-radio>
+            </div>
+            <div class="place place-mar pad-tp-10">
+              <div style="padding: 10% 0" v-show="radio == 1">
+                指挥所：
+                <el-select size="small" v-model="location" placeholder="请选择">
+                  <el-option
+                    z-index="0"
+                    v-for="item in locationOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+              <div
+                class="tree-iframe flex-center scroll-bar-style"
+                v-show="radio == 2"
+              >
+                <el-tree
                   :data="treeData"
                   :props="defaultProps"
                   :expand-on-click-node="false"
                   default-expand-all
                   class="tree-line"
                   :indent="0"
-              >
-              </el-tree>
+                >
+                </el-tree>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="title pad-lt-10 rim">详情介绍</div>
-        <div class="place-mar flex-between">
-          <div>hfhfh</div>
-          <img width="200" height="250">
-        </div>
+          <div class="title pad-lt-10 rim">详情介绍</div>
+          <div class="place-mar flex-between">
+            <div>hfhfh</div>
+            <img width="200" height="250" />
+          </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
           <div class="place-mar flex-column">
             <div>
               <el-form-item label="指挥者:">
-                <el-input v-model="formInline.user" size="small" placeholder="审批人"></el-input>
+                <el-input
+                  v-model="formInline.user"
+                  size="small"
+                  placeholder="审批人"
+                ></el-input>
               </el-form-item>
               <el-form-item label="船长度:">
-                <el-input v-model="formInline.shipLength" size="small" placeholder="审批人"></el-input>
+                <el-input
+                  v-model="formInline.shipLength"
+                  size="small"
+                  placeholder="审批人"
+                ></el-input>
               </el-form-item>
             </div>
             <div>
               <el-form-item label="高度:">
                 <div class="flex-start form-pad">
-                  <el-input v-model="formInline.height" size="small" placeholder="审批人"></el-input>
+                  <el-input
+                    v-model="formInline.height"
+                    size="small"
+                    placeholder="审批人"
+                  ></el-input>
                   <span>米</span>
                 </div>
               </el-form-item>
               <el-form-item label="速度:">
                 <div class="flex-start form-pad">
-                  <el-input v-model="formInline.spend" size="small" placeholder="审批人"></el-input>
+                  <el-input
+                    v-model="formInline.spend"
+                    size="small"
+                    placeholder="审批人"
+                  ></el-input>
                   <span>千米/h</span>
                 </div>
               </el-form-item>
@@ -69,100 +95,124 @@
           <div class="title pad-lt-10 rim">经纬度</div>
           <div class="place-mar">
             <el-form-item label="经度:">
-              <el-input v-model="formInline.longitude" size="small" placeholder="审批人"></el-input>
+              <el-input
+                v-model="formInline.longitude"
+                size="small"
+                placeholder="审批人"
+              ></el-input>
             </el-form-item>
             <el-form-item label="纬度:">
-              <el-input v-model="formInline.latitude" size="small" placeholder="审批人"></el-input>
+              <el-input
+                v-model="formInline.latitude"
+                size="small"
+                placeholder="审批人"
+              ></el-input>
             </el-form-item>
           </div>
-        <div class="title pad-lt-10 rim">指挥所人员</div>
-        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
-             style="flex-wrap: nowrap;align-items: center;"
-        >
-          <el-input
+          <div class="title pad-lt-10 rim">指挥所人员</div>
+          <div
+            class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+            style="flex-wrap: nowrap; align-items: center"
+          >
+            <el-input
               placeholder="请输入搜索内容"
               suffix-icon="el-icon-search"
               v-model="people"
               size="small"
-              style="width: 27%;"
-          >
-          </el-input>
-          <div style="margin-right: 8%">
-            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
-              <i
+              style="width: 27%"
+            >
+            </el-input>
+            <div style="margin-right: 8%">
+              <el-tooltip
+                class="pad-tp-10"
+                effect="dark"
+                content="添加编组"
+                placement="top"
+              >
+                <i
                   class="pointer add-btn el-icon-circle-plus-outline"
                   @click="handleAddMarshal(1)"
-                  style="font-size: 18px;padding-left:16px;"
-              ></i>
-            </el-tooltip>
-            <el-tree
+                  style="font-size: 18px; padding-left: 16px"
+                ></i>
+              </el-tooltip>
+              <el-tree
                 :data="treeData"
                 :props="defaultProps"
                 :expand-on-click-node="false"
                 default-expand-all
                 class="tree-line"
                 :indent="0"
-            >
-            </el-tree>
+              >
+              </el-tree>
+            </div>
           </div>
-        </div>
-        <div class="title pad-lt-10 rim">组织席位</div>
-        <div class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
-             style="flex-wrap: nowrap;align-items: center;"
-        >
-          <el-input
+          <div class="title pad-lt-10 rim">组织席位</div>
+          <div
+            class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+            style="flex-wrap: nowrap; align-items: center"
+          >
+            <el-input
               placeholder="请输入搜索内容"
               suffix-icon="el-icon-search"
               v-model="people"
               size="small"
-              style="width: 27%;"
-          >
-          </el-input>
-          <div style="margin-right: 8%">
-            <el-tooltip class="pad-tp-10" effect="dark" content="添加编组" placement="top">
-              <i
+              style="width: 27%"
+            >
+            </el-input>
+            <div style="margin-right: 8%">
+              <el-tooltip
+                class="pad-tp-10"
+                effect="dark"
+                content="添加编组"
+                placement="top"
+              >
+                <i
                   class="pointer add-btn el-icon-circle-plus-outline"
                   @click="handleAddMarshal(1)"
-                  style="font-size: 18px;padding-left:16px;"
-              ></i>
-            </el-tooltip>
-            <el-tree
+                  style="font-size: 18px; padding-left: 16px"
+                ></i>
+              </el-tooltip>
+              <el-tree
                 :data="treeData"
                 :props="defaultProps"
                 :expand-on-click-node="false"
                 default-expand-all
                 class="tree-line"
                 :indent="0"
-            >
-            </el-tree>
+              >
+              </el-tree>
+            </div>
           </div>
-        </div>
-        <div class="ta-c pad-tp-10 rim">
-          <el-button type="primary" size="small">保存</el-button>
-        </div>
+          <div class="ta-c pad-tp-10 rim">
+            <el-button type="primary" size="small">保存</el-button>
+          </div>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="下辖力量" name="second">
         <div class="pad-bt-10 flex-end">
           <div>
-            <el-button type="primary" size="small" @click="() => handleAddPower(1)">
+            <el-button
+              type="primary"
+              size="small"
+              @click="() => handleAddPower(1)"
+            >
               添加
             </el-button>
           </div>
         </div>
         <el-table
-            :data="tableData"
-            :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-            size="mini"
-            border
-            align="center"
-            highlight-current-row
-            tooltip-effect="dark"
-            v-loading="loading"
-            element-loading-text="加载中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-            style="width: 100%"
+          :data="tableData"
+          :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
+          size="small"
+          border
+          align="center"
+          highlight-current-row
+          tooltip-effect="dark"
+          v-loading="loading"
+          element-loading-text="加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          style="width: 100%"
         >
           <el-table-column prop="name" label="力量名称" min-width="60">
             <template slot-scope="scope">
@@ -174,13 +224,13 @@
           <el-table-column label="操作" min-width="50">
             <template slot-scope="scope">
               <el-button
-                  type="text"
-                  size="small"
-                  @click="handleAddPower(2, scope.row)"
-              >编辑</el-button
+                type="text"
+                size="small"
+                @click="handleAddPower(2, scope.row)"
+                >编辑</el-button
               >
               <el-button type="text" size="small" @click="handleDel(scope.row)"
-              >删除</el-button
+                >删除</el-button
               >
             </template>
           </el-table-column>
@@ -189,20 +239,20 @@
     </el-tabs>
     <!-- :height="tableHeight" -->
     <power-add
-        :dialog-data="dialogData"
-        @handleDialogInfo="getDialogInfo"
+      :dialog-data="dialogData"
+      @handleDialogInfo="getDialogInfo"
     ></power-add>
     <group-add
-        :dialog-data="groupDialogData"
-        @handleDialogInfo="getGroupDialogInfo"
+      :dialog-data="groupDialogData"
+      @handleDialogInfo="getGroupDialogInfo"
     ></group-add>
     <auth-add
-        :dialog-data="authDialogData"
-        @handleDialogInfo="getAuthDialogInfo"
+      :dialog-data="authDialogData"
+      @handleDialogInfo="getAuthDialogInfo"
     ></auth-add>
     <user-add
-        :dialog-data="userDialogData"
-        @handleDialogInfo="getUserDialogInfo"
+      :dialog-data="userDialogData"
+      @handleDialogInfo="getUserDialogInfo"
     ></user-add>
   </div>
 </template>
@@ -222,7 +272,7 @@ export default {
       type: [String, Number],
     },
   },
-  data(){
+  data() {
     return {
       people: "",
       userDialogData: {
@@ -349,20 +399,19 @@ export default {
         },
       ],
       tableHeight: 260,
-      activeTabName: 'first',
-      radio: '1',
+      activeTabName: "first",
+      radio: "1",
       formInline: {
-        user: '',
-        shipLength:'',
-        height: '',
-        spend:'',
-        longitude:'',
-        latitude:'',
+        user: "",
+        shipLength: "",
+        height: "",
+        spend: "",
+        longitude: "",
+        latitude: "",
       },
     };
   },
-  created() {
-  },
+  created() {},
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
@@ -416,21 +465,21 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-          .then(() => {
-            scenarioPowerRemove({id: data.id}).then((res) => {
-              console.log(res, "==res");
-              this.$message({
-                type: "success",
-                message: "删除成功!",
-              });
-            });
-          })
-          .catch(() => {
+        .then(() => {
+          scenarioPowerRemove({ id: data.id }).then((res) => {
+            console.log(res, "==res");
             this.$message({
-              type: "info",
-              message: "已取消删除",
+              type: "success",
+              message: "删除成功!",
             });
           });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     //查询所有指挥人员
     getCommandStaffData() {
@@ -451,8 +500,8 @@ export default {
         console.log(res, "#0099");
       });
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -462,24 +511,24 @@ export default {
   background-color: rgb(191, 191, 191);
   margin-bottom: 12px;
 }
-.rim{
+.rim {
   margin: 15px 0;
 }
-.form-pad{
-  span{
+.form-pad {
+  span {
     padding-left: 5px;
     width: 26%;
     font-size: 14px;
   }
 }
-.place{
+.place {
   border: 1px solid #bfbfbf;
   min-height: 260px;
 }
-.place-mar{
+.place-mar {
   margin: 0 5%;
 }
-.el-form-item{
+.el-form-item {
   margin-bottom: 15px;
 }
 </style>

@@ -42,6 +42,10 @@ export default {
     };
   },
   created() {
+    let querys = this.$route.query;
+    if (querys && querys.activeName) {
+      this.activeName = querys.activeName;
+    }
     console.log(3322);
   },
   methods: {
@@ -74,7 +78,6 @@ export default {
           break;
       }
       this.currentComponent = component;
-      // console.log(tab, event);
     },
     changeView(view, item) {
       console.log(view, item, "==view, item");

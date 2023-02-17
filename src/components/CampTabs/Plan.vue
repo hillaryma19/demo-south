@@ -1,11 +1,13 @@
 <template>
   <div class="g-wrapper">
     <div class="pad-tp-10 pad-bt-10">
-      <el-button plain type="primary" size="mini" @click="handleAdd"
+      <el-button plain type="primary" size="small" @click="handleAdd"
         >新建计划</el-button
       >
     </div>
-    <div class="g-container"><Gantt></Gantt></div>
+    <div class="g-container">
+      <Gantt @onTaskClick="handleOnTaskClick"></Gantt>
+    </div>
     <plan-add
       :dialog-data="dialogData"
       @handleDialogInfo="getDialogInfo"
@@ -33,6 +35,10 @@ export default {
     },
     getDialogInfo() {
       this.dialogData.dialogVisible = false;
+    },
+    handleOnTaskClick(params) {
+      console.log(params, "==params");
+      this.dialogData.dialogVisible = true;
     },
   },
   mounted() {},

@@ -302,6 +302,7 @@ export default {
     this.addKeyEventListener();
   },
   mounted() {
+    console.log(this.activeName, "==this.activeName");
     this.$nextTick(() => {
       this.handleActiveName(this.activeName);
       window.onresize = () => {
@@ -552,6 +553,7 @@ export default {
       .panel-title {
         line-height: 20px;
         padding-bottom: 8px;
+        font-size: 14px;
         .line {
           width: 2px;
           height: 20px;

@@ -454,7 +454,7 @@ export default {
       border-left: 1px solid #dcdfe6;
       padding: 0 12px;
       .font {
-        font-size: 12px;
+        font-size: 14px;
       }
     }
     .middle {

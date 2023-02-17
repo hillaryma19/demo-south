@@ -244,12 +244,14 @@ export default {
           const action = buttons.getAttribute("data-action");
           switch (action) {
             case "edit1":
-              _this.taskDialogData.dialogVisible = true;
-              _this.taskDialogData.dialogType = 2;
+              // _this.taskDialogData.dialogVisible = true;
+              // _this.taskDialogData.dialogType = 2;
+              _this.$emit("onTaskClick", { type: 2, id: id });
               break;
             case "add1":
-              _this.taskDialogData.dialogVisible = true;
-              _this.taskDialogData.dialogType = 1;
+              // _this.taskDialogData.dialogVisible = true;
+              // _this.taskDialogData.dialogType = 1;
+              _this.$emit("onTaskClick", { type: 1, id: id });
               break;
             case "delete":
               _this

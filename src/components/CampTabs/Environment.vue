@@ -6,7 +6,7 @@
           :data="tableData"
           :height="tableHeight"
           :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-          size="mini"
+          size="small"
           border
           align="center"
           highlight-current-row
@@ -25,7 +25,7 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
-                size="mini"
+                size="small"
                 @click="handleDeploy(scope.row)"
                 >部署</el-button
               >
@@ -82,12 +82,14 @@ export default {
     };
   },
   mounted() {
-    this.$nextTick(() => {
-      this.onWindowResize();
-      window.onresize = () => {
+    if (this.$refs.tabpanel) {
+      this.$nextTick(() => {
         this.onWindowResize();
-      };
-    });
+        window.onresize = () => {
+          this.onWindowResize();
+        };
+      });
+    }
   },
   methods: {
     onWindowResize() {
