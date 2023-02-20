@@ -13,12 +13,12 @@
       <el-form-item label="想定说明" prop="desc">
         <el-input type="textarea" v-model="form.desc"></el-input>
       </el-form-item>
-      <el-form-item label="发生背景" prop="desc">
+      <!-- <el-form-item label="发生背景" prop="desc">
         <el-input type="textarea" v-model="form.desc"></el-input>
       </el-form-item>
       <el-form-item label="参考文档" prop="desc">
         <el-input type="textarea" v-model="form.desc"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item>
         <el-button size="small" type="primary" @click="onSubmit('form')"
           >确 定</el-button

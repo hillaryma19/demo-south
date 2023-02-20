@@ -4,7 +4,7 @@
       <!-- 地图 -->
       <Map
         v-show="currentComponent != 'FormationTree'"
-        :height="drawerData.drawerHeight"
+        :height="wrapperInnerHeight"
       ></Map>
       <!-- 左侧 -->
       <div class="left-tree flex-row" ref="leftTree">
@@ -192,7 +192,6 @@ export default {
   data() {
     return {
       leftTabWidth: 0,
-      leftTreeWidth: 500,
       wrapperInnerWidth: 1000,
       wrapperInnerHeight: 1000,
       bottomPanelWidth: 420,
@@ -333,8 +332,8 @@ export default {
           break;
         case "5":
           component = "Plan";
-          this.leftPanelWidth = this.wrapperInnerWidth - 8;
           this.leftTitle = leftTitleArray[4];
+          this.leftPanelWidth = this.wrapperInnerWidth - 8;
           break;
         case "6":
           component = "GroupTree";
@@ -349,8 +348,8 @@ export default {
         default:
           break;
       }
-      this.currentComponent = component;
       this.onWindowResize();
+      this.currentComponent = component;
     },
     onDragStart(event) {
       this.isDragging = true;
@@ -369,18 +368,20 @@ export default {
     },
     onWindowResize() {
       this.$nextTick(() => {
-        let wrapperInner = this.$refs.wrapperInner,
-          leftTree = this.$refs.leftTree;
-
+        let leftTree = this.$refs.leftTree;
+        let wrapperInner = this.$refs.wrapperInner;
         if (wrapperInner) {
-          this.drawerData.drawerHeight = wrapperInner.offsetHeight;
           this.wrapperInnerWidth = wrapperInner.offsetWidth;
           this.wrapperInnerHeight = wrapperInner.offsetHeight;
+          this.drawerData.drawerHeight = this.wrapperInnerHeight;
+          if (this.currentComponent == "Plan") {
+            this.leftPanelWidth = this.wrapperInnerWidth - 8;
+          }
         }
         if (leftTree) {
-          this.leftTreeWidth = leftTree.offsetWidth;
+          this.leftTabWidth = leftTree.offsetWidth;
         }
-        this.bottomPanelWidth = this.wrapperInnerWidth - this.leftTreeWidth - 8;
+        this.bottomPanelWidth = this.wrapperInnerWidth - this.leftTabWidth - 8;
       });
     },
     // 点击添加

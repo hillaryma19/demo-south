@@ -7,7 +7,7 @@
 <script>
 import { gantt } from "dhtmlx-gantt";
 import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
-import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_meadow.css";
+// import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_meadow.css";
 export default {
   name: "DhtmlxGantt",
   data() {

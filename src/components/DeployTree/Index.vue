@@ -25,10 +25,12 @@
               type="primary"
               size="mini"
               plain
-              @click="() => handleDeploy(data)"
+              draggable
+              @dragstart="onDragStart($event, data)"
             >
               部署
             </el-button>
+            <!-- @click="() => handleDeploy(data)" -->
           </span>
         </span></el-tree
       >
@@ -116,6 +118,11 @@ export default {
   },
   mounted() {},
   methods: {
+    onDragStart(event, item) {
+      // event.dataTransfer.setData("currentId", item.id);
+      event.dataTransfer.setData("currentName", item.label);
+      console.log(event, "==onDragStart");
+    },
     getDialogInfo() {
       this.dialogData.dialogVisible = false;
     },

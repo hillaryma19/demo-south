@@ -35,11 +35,14 @@
           <el-table-column align="center" label="操作" min-width="50">
             <template slot-scope="scope">
               <el-button
-                type="text"
+                type="primary"
                 size="mini"
-                @click="handleDeploy(scope.row)"
+                plain
+                draggable
+                @dragstart="onDragStart($event, scope.row)"
                 >部署</el-button
               >
+              <!-- @click="handleDeploy(scope.row)" -->
             </template>
           </el-table-column>
         </el-table>
