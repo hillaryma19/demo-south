@@ -20,30 +20,24 @@ import "ol/ol.css";
 // import { Map, View } from "ol";
 import Map from "ol/Map.js";
 import View from "ol/View.js";
-import OSM from "ol/source/OSM.js";
-import TileLayer from "ol/layer/Tile.js";
-import XYZ from "ol/source/XYZ";
 import { Overlay } from "ol";
 import { defaults as defaultControls } from "ol/control";
 import { Projection } from "ol/proj";
 import ImageWMS from "ol/source/ImageWMS";
 import Image from "ol/layer/Image";
-import WMTS from "ol/source/WMTS.js"; //手绘地图以 WMTS （Web Map Tile Service, Web 地图瓦片形式）加载
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
-import OlGeomPoint from "ol/geom/Point";
-import OlStyleStyle from "ol/style/Style";
-import OlStyleIcon from "ol/style/Icon";
-import Cluster from "ol/source/Cluster";
 import Feature from "ol/Feature";
-import { Vector as VectorSource } from "ol/source";
-import { Vector as VectorLayer } from "ol/layer";
-import { Point, Polygon } from "ol/geom";
+//手绘地图以 WMTS （Web Map Tile Service, Web 地图瓦片形式）加载
+import { OSM, Vector as VectorSource, XYZ, WMTS } from "ol/source.js";
+import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import * as turf from "@/utils/turf";
-import DragAndDrop from "ol/interaction/DragAndDrop";
-// import GeoJSON from "ol/format/GeoJSON.js";
-import { GeoJSON, GPX, IGC, KML, TopoJSON, GML } from "ol/format";
-
-import DragPan from "ol/interaction/DragPan"; //先在项目中引用此包
+import {
+  DragAndDrop,
+  DragPan,
+  Pointer as PointerInteraction,
+  defaults as defaultInteractions,
+} from "ol/interaction.js";
+import { GPX, GeoJSON, IGC, KML, TopoJSON } from "ol/format.js";
 import { fromLonLat } from "ol/proj";
 import {
   Style,
@@ -53,6 +47,18 @@ import {
   Stroke,
   Text,
 } from "ol/style";
+import { LineString, Point, Polygon } from "ol/geom.js";
+import Drag from "@/utils/o-drag.js";
+const locationImg = require("@/assets/img/car.png");
+const dragAndDropInteraction = new DragAndDrop({
+  formatConstructors: [GPX, GeoJSON, IGC, KML, TopoJSON],
+});
+const multiArray = [
+  [116.495393, 39.950565],
+  [116.34419, 39.947025],
+  [116.328092, 39.900545],
+  [116.424103, 39.514645],
+];
 export default {
   props: {
     height: {
@@ -80,9 +86,7 @@ export default {
       console.log(event, "==node, data");
       this.dropEvent = event;
       const name = event.dataTransfer.getData("currentName");
-      // this.createClusterLabel({ name: name, coordinate: e.coordinate });
       let pan = null;
-      console.log(name, "==9999");
       window.map.getInteractions().forEach((element) => {
         if (element instanceof DragPan) {
           pan = element;
@@ -94,11 +98,6 @@ export default {
         fromLonLat([event.clientX, event.clientY]),
         "==pan"
       );
-
-      // this.createClusterLabel({
-      //   name: "999",
-      //   coordinates: fromLonLat([event.clientX, event.clientY]),
-      // });
     },
     onDragOver(event) {
       event.preventDefault();
@@ -113,6 +112,7 @@ export default {
         axisOrientation: "neu",
       });
       const _this = this;
+      const pointFeature = new Feature(new Point([116.403218, 39.92372]));
       this.image = new Image({
         source: new ImageWMS({
           //不能设置为0，否则地图不展示。
@@ -174,12 +174,32 @@ export default {
       });
       this.map = new Map({
         target: document.getElementById("map"),
+        interactions: defaultInteractions().extend([
+          dragAndDropInteraction,
+          new Drag(),
+        ]),
         layers: [
           new TileLayer({
             source: new XYZ({
               url: "http://t3.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=49ea1deec0ffd88ef13a3f69987e9a63",
               wrapX: true,
             }),
+          }),
+
+          new VectorLayer({
+            source: new VectorSource({
+              features: [pointFeature],
+            }),
+            style: {
+              "icon-src": locationImg,
+              "icon-opacity": 0.95,
+              "icon-anchor": [0.5, 46],
+              "icon-anchor-x-units": "fraction",
+              "icon-anchor-y-units": "pixels",
+              "stroke-width": 3,
+              "stroke-color": [255, 0, 0, 1],
+              "fill-color": [0, 0, 255, 0.6],
+            },
           }),
         ],
         view: new View({
@@ -197,11 +217,17 @@ export default {
       window.map = this.map;
       this.singleClick(); //绑定地图点击事件
       this.addOverlay();
-      this.createClusterLabel({
-        name: "beijing",
-        coordinates: [116.403218, 39.92372],
-      });
       this.addDragAndDrop();
+      multiArray.forEach((item, index) => {
+        console.log(item, index, "==item, index");
+        this.createIcons({
+          name: "beijing" + index,
+          // coordinates: [116.403218, 39.92372],
+          coordinates: item,
+          index: index,
+        });
+      });
+      console.log(new Drag(), "==new Drag()");
     },
     addDragAndDrop() {
       const _this = this;
@@ -212,7 +238,7 @@ export default {
       });
       this.drop = new DragAndDrop({
         source: source,
-        formatConstructors: [GeoJSON, GPX, IGC, KML, TopoJSON, GML],
+        formatConstructors: [GeoJSON, GPX, IGC, KML, TopoJSON],
       });
 
       this.drop.on("addfeatures", (e) => {
@@ -220,42 +246,6 @@ export default {
       });
       window.map.addInteraction(this.drop);
       window.map.addLayer(layer);
-      // window.map.getView().fit(source.getExtent());
-      var displayFeatureInfo = function (pixel) {
-        console.log(pixel, "==pixel");
-        var features = [];
-        window.map.forEachFeatureAtPixel(pixel, function (feature) {
-          features.push(feature);
-        });
-        console.log(features, "==features");
-        return;
-        if (features.length > 0) {
-          var info = [];
-          var i, ii;
-          for (i = 0, ii = features.length; i < ii; ++i) {
-            info.push(features[i].get("name"));
-          }
-        } else {
-          console.log(44);
-        }
-      };
-
-      // window.map.on("pointermove", function (evt) {
-      //   // console.log(evt, "===evt");
-      //   if (evt.dragging) {
-      //     return;
-      //   }
-      //   var pixel = window.map.getEventPixel(evt.originalEvent);
-      //   displayFeatureInfo(pixel);
-      // });
-      console.log(
-        new DragAndDrop({
-          source: source,
-          formatConstructors: [GeoJSON, GPX, IGC, KML, TopoJSON, GML],
-        }).DragAndDropEvent,
-        this.drop.getKeys(),
-        "==GeoJSON"
-      );
     },
     createClusterLabel(data) {
       console.log(data.coordinates, "==data.coordinates");
@@ -283,6 +273,26 @@ export default {
       layer.setSource(source);
       window.map.addLayer(layer);
     },
+    createIcons(data) {
+      let feature = new Feature({
+        type: "icon",
+        title: data.name,
+        geometry: new Point(data.coordinates),
+      });
+      let layer = null;
+      layer = new VectorLayer({
+        source: new VectorSource({
+          features: [feature],
+        }),
+        style: new Style({
+          image: new Icon({
+            anchor: [0.5, 1],
+            src: locationImg,
+          }),
+        }),
+      });
+      window.map.addLayer(layer);
+    },
     singleClick() {
       const _this = this;
       // this.$API.commandStaffFindAll({cp:1,rows:30}).then(res =>{})
@@ -294,7 +304,7 @@ export default {
         );
         if (feature) {
           const getTitle = feature.get("title");
-          if (getTitle == "beijing") {
+          if (getTitle && getTitle.indexOf("beijing") != -1) {
             // 设置弹窗位置
             let coordinates = feature.getGeometry().getCoordinates();
             _this.isPopupVisible = true;
