@@ -188,6 +188,20 @@ export default {
           dateToStr(date) + "日 ~ " + dateToStr(endDate) + "日 " + weekNum(date)
         );
       };
+
+      const dayScaleTemplate = function (date) {
+        let dateToMon = gantt.date.date_to_str("%M"),
+          dateToDay = gantt.date.date_to_str("%d"),
+          weekDay = gantt.date.date_to_str("%D");
+        return (
+          dateToMon(date) +
+          dateToDay(date) +
+          "日" +
+          "/" +
+          "星期" +
+          weekDay(date)
+        );
+      };
       gantt.config.layout = {
         css: "gantt_container",
         cols: [
@@ -253,7 +267,8 @@ export default {
         {
           unit: "day",
           step: 1,
-          format: "%d / %D",
+          // format: "%d / %D",
+          format: dayScaleTemplate,
           css: function (date) {
             if (!gantt.isWorkTime({ date: date, unit: "day" })) {
               return "weekend";

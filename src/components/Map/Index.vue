@@ -1,21 +1,58 @@
 <template>
-  <baidu-map
-    id="map"
-    :style="{ height: `${height}px` }"
-    :center="center"
-    :zoom="zoom"
-    @ready="mapReady"
-    @click="getClickInfo"
-    ><!-- bm-marker 就是标注点 定位在point的经纬度上 跳动的动画 -->
-    <!-- <bm-marker
-      :position="point"
-      animation="BMAP_ANIMATION_BOUNCE"
-    ></bm-marker> -->
-  </baidu-map>
+  <div
+    class="map-wrapper"
+    @drop="onDrop($event)"
+    @dragover="onDragOver($event)"
+    @dragleave="onDragLeave($event)"
+  >
+    <div
+      id="map"
+      class="map"
+      :style="{ width: '100%', height: `${height}px` }"
+    ></div>
+    <div class="popup" ref="popInfo" v-show="isPopupVisible">弹框</div>
+    <div id="year"></div>
+  </div>
 </template>
 
 <script>
-const locationImg = require("@/assets/img/car.png");
+import "ol/ol.css";
+// import { Map, View } from "ol";
+import Map from "ol/Map.js";
+import View from "ol/View.js";
+import OSM from "ol/source/OSM.js";
+import TileLayer from "ol/layer/Tile.js";
+import XYZ from "ol/source/XYZ";
+import { Overlay } from "ol";
+import { defaults as defaultControls } from "ol/control";
+import { Projection } from "ol/proj";
+import ImageWMS from "ol/source/ImageWMS";
+import Image from "ol/layer/Image";
+import WMTS from "ol/source/WMTS.js"; //手绘地图以 WMTS （Web Map Tile Service, Web 地图瓦片形式）加载
+import WMTSTileGrid from "ol/tilegrid/WMTS.js";
+import OlGeomPoint from "ol/geom/Point";
+import OlStyleStyle from "ol/style/Style";
+import OlStyleIcon from "ol/style/Icon";
+import Cluster from "ol/source/Cluster";
+import Feature from "ol/Feature";
+import { Vector as VectorSource } from "ol/source";
+import { Vector as VectorLayer } from "ol/layer";
+import { Point, Polygon } from "ol/geom";
+import * as turf from "@/utils/turf";
+import DragAndDrop from "ol/interaction/DragAndDrop";
+// import GeoJSON from "ol/format/GeoJSON.js";
+import { GeoJSON, GPX, IGC, KML, TopoJSON, GML } from "ol/format";
+
+import DragPan from "ol/interaction/DragPan"; //先在项目中引用此包
+import { fromLonLat } from "ol/proj";
+import {
+  Style,
+  Fill,
+  Circle as CircleStyle,
+  Icon,
+  Stroke,
+  Text,
+} from "ol/style";
 export default {
   props: {
     height: {
@@ -25,155 +62,292 @@ export default {
   },
   data() {
     return {
-      center: { lng: 0, lat: 0 },
-      zoom: 3,
-      map: {},
-      BMap: {},
-      mapStyle: {
-        styleJson: [
-          {
-            featureType: "water",
-            elementType: "geometry",
-            stylers: {
-              color: "#20ab6a",
-            },
-          },
-        ],
-      },
-      point: {},
-      location: locationImg,
+      map: null,
+      image: null,
+      isPopupVisible: false,
+      popupInfo: null,
+      dropEvent: null,
+      drop: null,
     };
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.init();
+    });
+  },
   methods: {
-    mapReady({ BMap, map }) {
-      console.log(BMap, map, "==BMap, map");
-      this.center.lng = 116.404;
-      this.center.lat = 39.915;
-      this.zoom = 15;
-      this.map = map;
-      this.BMap = BMap;
-      // 添加鼠标滚动缩放
-      map.enableScrollWheelZoom();
-      //添加比例尺控件
-      map.addControl(new BMap.ScaleControl());
-      //添加地图类型控件
-      map.addControl(new BMap.MapTypeControl());
-      //设置地图皮肤
-      // map.setMapStyleV2({ styleJson: this.mapStyle.styleJson });
-      console.log(BMap, map, "==BMap, map");
+    onDrop(event) {
+      console.log(event, "==node, data");
+      this.dropEvent = event;
+      const name = event.dataTransfer.getData("currentName");
+      // this.createClusterLabel({ name: name, coordinate: e.coordinate });
+      let pan = null;
+      console.log(name, "==9999");
+      window.map.getInteractions().forEach((element) => {
+        if (element instanceof DragPan) {
+          pan = element;
+        }
+      });
+      console.log(
+        pan,
+        this.drop,
+        fromLonLat([event.clientX, event.clientY]),
+        "==pan"
+      );
+
+      // this.createClusterLabel({
+      //   name: "999",
+      //   coordinates: fromLonLat([event.clientX, event.clientY]),
+      // });
     },
-    //添加Marker
-    addMarker(item, index) {
-      console.log(item.point, "==item.point");
+    onDragOver(event) {
+      event.preventDefault();
+    },
+    onDragLeave(event) {
+      event.preventDefault();
+    },
+    init() {
+      let projection = new Projection({
+        code: "EPSG:4326",
+        units: "degrees",
+        axisOrientation: "neu",
+      });
       const _this = this;
-      let point = item.point
-        ? new _this.BMap.Point(item.point.lng, item.point.lat)
-        : new _this.BMap.Point(item.longitude, item.latitude);
-      let marker = new _this.BMap.Marker(point, {
-        icon: new _this.BMap.Icon(_this.location, new _this.BMap.Size(50, 50)),
-        offset: new _this.BMap.Size(10, -16),
+      this.image = new Image({
+        source: new ImageWMS({
+          //不能设置为0，否则地图不展示。
+          ratio: 1,
+          url: "http://192.168.1.51:8080/geoserver/yangchao/wms?service=WMS&version=1.1.0&request=GetMap&layers=yangchao%3Abeijing_all&bbox=115.41728200000011%2C39.43828200000007%2C117.50012600000011%2C41.05924400000007&width=768&height=597&srs=EPSG%3A4326&styles=&format=application/openlayers",
+          serverType: "geoserver",
+        }),
+        visible: true,
       });
-      item.name = `label-${item.point.lng}`;
-      _this.addLabel(marker, item); //添加label
-      _this.map.addOverlay(marker); //挂载标注
+      _this.satelliteMap = new TileLayer({
+        source: new WMTS({
+          url: "http://192.168.1.51:8080/geoserver/gwc/service/wmts",
+          layer: "yangchao:北京市_18", //注意每个图层这里不同
+          matrixSet: "EPSG:4326",
+          format: "image/png",
+          style: "",
+          projection: projection,
+          tileGrid: new WMTSTileGrid({
+            tileSize: [256, 256],
+            extent: [-180.0, -90.0, 180.0, 90.0],
+            origin: [-180.0, 90.0],
+            resolutions: [
+              0.703125, 0.3515625, 0.17578125, 0.087890625, 0.0439453125,
+              0.02197265625, 0.010986328125, 0.0054931640625, 0.00274658203125,
+              0.001373291015625, 6.866455078125e-4, 3.4332275390625e-4,
+              1.71661376953125e-4, 8.58306884765625e-5, 4.291534423828125e-5,
+              2.1457672119140625e-5, 1.0728836059570312e-5,
+              5.364418029785156e-6, 2.682209014892578e-6, 1.341104507446289e-6,
+              6.705522537231445e-7, 3.3527612686157227e-7,
+            ],
+            matrixIds: [
+              "EPSG:4326:0",
+              "EPSG:4326:1",
+              "EPSG:4326:2",
+              "EPSG:4326:3",
+              "EPSG:4326:4",
+              "EPSG:4326:5",
+              "EPSG:4326:6",
+              "EPSG:4326:7",
+              "EPSG:4326:8",
+              "EPSG:4326:9",
+              "EPSG:4326:10",
+              "EPSG:4326:11",
+              "EPSG:4326:12",
+              "EPSG:4326:13",
+              "EPSG:4326:14",
+              "EPSG:4326:15",
+              "EPSG:4326:16",
+              "EPSG:4326:17",
+              "EPSG:4326:18",
+              "EPSG:4326:19",
+              "EPSG:4326:20",
+              "EPSG:4326:21",
+            ],
+          }),
+          wrapX: true,
+        }),
+        visible: false,
+      });
+      this.map = new Map({
+        target: document.getElementById("map"),
+        layers: [
+          new TileLayer({
+            source: new XYZ({
+              url: "http://t3.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=49ea1deec0ffd88ef13a3f69987e9a63",
+              wrapX: true,
+            }),
+          }),
+        ],
+        view: new View({
+          projection: "EPSG:4326",
+          center: [116.4, 39.9],
+          zoom: 4,
+        }),
+        //加载控件到地图容器中
+        controls: defaultControls({
+          zoom: false,
+          rotate: false,
+          attribution: false,
+        }),
+      });
+      window.map = this.map;
+      this.singleClick(); //绑定地图点击事件
+      this.addOverlay();
+      this.createClusterLabel({
+        name: "beijing",
+        coordinates: [116.403218, 39.92372],
+      });
+      this.addDragAndDrop();
     },
-    //添加标注label
-    addLabel(markers, item) {
-      let _this = this;
-      let label = new _this.BMap.Label(item["name"], {
-        offset: new _this.BMap.Size(24, -20),
+    addDragAndDrop() {
+      const _this = this;
+      const source = new VectorSource(); //创建一个没有初始数据的矢量源
+      const layer = new VectorLayer({
+        //创建一个新的layer，并将其添加到地图
+        source: source,
       });
-      //label设置样式
-      label.setStyle({
-        color: "black",
-        fontSize: "12px",
-        height: "34px",
-        border: null,
-        padding: "5px",
-        // background: `url(${labels})  `,
+      this.drop = new DragAndDrop({
+        source: source,
+        formatConstructors: [GeoJSON, GPX, IGC, KML, TopoJSON, GML],
       });
-      markers.setLabel(label);
-    },
 
-    //添加标注title
-    addTitle(markers, point, item) {
-      let _this = this;
-      let opts = {
-        width: 200, // 信息窗口宽度
-        height: 100, // 信息窗口高度
-        title: item.name, // 信息窗口标题
-      };
-      let sContent = `<h2 style='margin:0 0 5px 0;padding:0.2em 0'>
-            ${item && item.title ? item.title : "标题"}</h2><h5>${
-        item && item.detail ? item.detail : "内容"
-      }</h5>`;
-      let infoWindow = new _this.BMap.InfoWindow(sContent, opts); // 创建信息窗口对象
-      markers.addEventListener("mouseover", function (e) {
-        _this.map.openInfoWindow(infoWindow, point); //开启信息窗口
+      this.drop.on("addfeatures", (e) => {
+        console.log(e, "---------------");
       });
-      markers.addEventListener("mouseout", function (e) {
-        _this.map.closeInfoWindow(infoWindow, point); //关闭信息窗口
-      });
-    },
-
-    //添加圆circle
-    circle(item) {
-      let _this = this;
-      _this.map.addOverlay(
-        new _this.BMap.Circle(
-          { lng: item.longitude, lat: item.latitude },
-          900,
-          {
-            strokeColor: "blue",
-            strokeWeight: 2,
-            strokeOpacity: 0.5,
+      window.map.addInteraction(this.drop);
+      window.map.addLayer(layer);
+      // window.map.getView().fit(source.getExtent());
+      var displayFeatureInfo = function (pixel) {
+        console.log(pixel, "==pixel");
+        var features = [];
+        window.map.forEachFeatureAtPixel(pixel, function (feature) {
+          features.push(feature);
+        });
+        console.log(features, "==features");
+        return;
+        if (features.length > 0) {
+          var info = [];
+          var i, ii;
+          for (i = 0, ii = features.length; i < ii; ++i) {
+            info.push(features[i].get("name"));
           }
-        )
+        } else {
+          console.log(44);
+        }
+      };
+
+      // window.map.on("pointermove", function (evt) {
+      //   // console.log(evt, "===evt");
+      //   if (evt.dragging) {
+      //     return;
+      //   }
+      //   var pixel = window.map.getEventPixel(evt.originalEvent);
+      //   displayFeatureInfo(pixel);
+      // });
+      console.log(
+        new DragAndDrop({
+          source: source,
+          formatConstructors: [GeoJSON, GPX, IGC, KML, TopoJSON, GML],
+        }).DragAndDropEvent,
+        this.drop.getKeys(),
+        "==GeoJSON"
       );
     },
-
-    //添加线路polyline
-    addPolyline() {
-      let _this = this,
-        res = {};
-      let path = "M0 0 L-4 2 L0 -2 L4 2 Z";
-      let sy = new _this.BMap.Symbol(path, {
-        fillColor: "#fff",
-        fillOpacity: 0.6,
-        scale: 0.8, //图标缩放大小
-        strokeColor: "#fff", //设置矢量图标的线填充颜色
-        strokeWeight: 0, //设置线宽
+    createClusterLabel(data) {
+      console.log(data.coordinates, "==data.coordinates");
+      let feature = new Feature({
+        title: data.name,
+        geometry: new Point(data.coordinates),
       });
-      let icons = new _this.BMap.IconSequence(sy, "5%", "4%");
-      let polyline = new _this.BMap.Polyline(res, {
-        icons: [icons], //添加线路箭头
-        strokeColor: _this.searchModel.color,
-        enableClicking: false, //是否响应点击事件，默认为true
-        strokeWeight: "6", //折线的宽度，以像素为单位
-        strokeOpacity: 0.5, //折线的透明度，取值范围0 - 1
+      feature.setId("11");
+      feature.setStyle(
+        new Style({
+          image: new CircleStyle({
+            fill: new Fill({
+              color: "blue",
+            }),
+            radius: 10,
+          }),
+        })
+      );
+      let source = new VectorSource();
+      source.addFeature(feature);
+      let layer = new VectorLayer({
+        name: "test1",
+        title: "beijing",
       });
-      _this.map.addOverlay(polyline);
-      _this.map.setViewport(res); //根据提供的地理区域或坐标设置地图视野，调整后的视野会保证包含提供的地									理区域或坐标
+      layer.setSource(source);
+      window.map.addLayer(layer);
     },
-    //获取定位
-    getPosition(BMap, map) {
-      new BMap.Geolocation().getCurrentPosition(function (r) {
-        console.log(r);
+    singleClick() {
+      const _this = this;
+      // this.$API.commandStaffFindAll({cp:1,rows:30}).then(res =>{})
+      window.map.on("singleclick", (e) => {
+        console.log(e, e.coordinate, "==console.log(e.coordinate)");
+        let feature = window.map.forEachFeatureAtPixel(
+          e.pixel,
+          (feature) => feature
+        );
+        if (feature) {
+          const getTitle = feature.get("title");
+          if (getTitle == "beijing") {
+            // 设置弹窗位置
+            let coordinates = feature.getGeometry().getCoordinates();
+            _this.isPopupVisible = true;
+            _this.popupInfo.setPosition(coordinates);
+          } else {
+            _this.isPopupVisible = false;
+          }
+        } else {
+          _this.isPopupVisible = false;
+        }
       });
+      // window.map.once("pointerdrag", function (event) {
+      //   console.log(event, "地图发生拖拽");
+      //   console.log("pointerdrag事件注销");
+      // });
     },
-
-    //强制刷新地图
-    refreshMap() {
-      this.refresh = false;
-      this.$nextTick(() => {
-        this.refresh = true;
+    // 创建Overlay
+    addOverlay() {
+      //添加弹窗元素
+      let elPopup = this.$refs.popInfo;
+      this.popupInfo = new Overlay({
+        element: elPopup,
+        positioning: "bottom-center",
+        stopEvent: false,
+        offset: [0, -20],
+        zIndex: 17,
       });
-    },
-    // 点击地图
-    getClickInfo(e) {
-      console.log(e, "=000");
-      // this.addMarker(e);
+      window.map.addOverlay(this.popupInfo);
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  #year {
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    font-size: 2em;
+    font-weight: bold;
+  }
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+  .popup {
+    width: 200px;
+    height: 200px;
+    background-color: lightgreen;
+  }
+}
+</style>
