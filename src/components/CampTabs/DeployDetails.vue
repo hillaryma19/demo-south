@@ -244,6 +244,17 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+            style="text-align: center;margin:15px 0;"
+            small
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="cp"
+            :page-size="rows"
+            layout="prev, pager, next"
+            :total="1000"
+        >
+        </el-pagination>
       </el-tab-pane>
     </el-tabs>
     <!-- :height="tableHeight" -->
@@ -423,12 +434,20 @@ export default {
         personnel: "", //人员
         conference: "", //席位
       },
+      cp: 1,
+      rows: 20,
     };
   },
   created() {},
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     },
     // 点击添加人员
     handleAddUser(type, node, data) {
