@@ -2,9 +2,19 @@
   <el-dialog
     title="添加"
     :visible="dialogData.dialogVisible"
-    width="50%"
+    width="60%"
     :before-close="handleDialogClose"
   >
+    <div slot="title">
+      <i
+        style="font-size: 16px"
+        :class="{
+          'el-icon-plus': dialogData.dialogType == 1,
+          'el-icon-edit': dialogData.dialogType == 2,
+        }"
+      ></i>
+      {{ dialogData.dialogType == 1 ? "添加" : "编辑" }}
+    </div>
     <div class="dialog-content">
       <el-form ref="form" :model="form" label-width="100px" size="small">
         <el-form-item label="任务名称" prop="name">
@@ -243,20 +253,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-tag + .el-tag {
-  margin-left: 10px;
-  margin-bottom: 10px;
-}
-.button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
-  margin-left: 10px;
-  vertical-align: bottom;
+::v-deep .el-range-editor--small.el-input__inner {
+  width: 100%;
 }
 </style>

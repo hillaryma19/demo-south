@@ -37,7 +37,7 @@ export default {
         {
           id: 13,
           text: "方案 #2",
-          start_date: "03-04-2023",
+          start_date: "26-02-2023",
           type: "project",
           parent: "11",
           progress: 0.5,
@@ -81,7 +81,7 @@ export default {
         {
           id: 17,
           text: "Task #2.1",
-          start_date: "03-04-2023",
+          start_date: "25-02-2023",
           duration: "2",
           parent: "13",
           progress: 1,
@@ -92,7 +92,7 @@ export default {
         {
           id: 18,
           text: "Task #2.2",
-          start_date: "06-04-2023",
+          start_date: "24-02-2023",
           duration: "3",
           parent: "13",
           progress: 0.8,
@@ -103,7 +103,7 @@ export default {
         {
           id: 19,
           text: "Task #2.3",
-          start_date: "10-04-2023",
+          start_date: "23-02-2023",
           duration: "4",
           parent: "13",
           progress: 0.2,
@@ -114,7 +114,7 @@ export default {
         {
           id: 20,
           text: "Task #2.4",
-          start_date: "10-04-2023",
+          start_date: "20-02-2023",
           duration: "4",
           parent: "13",
           progress: 0,
@@ -125,7 +125,7 @@ export default {
         {
           id: 21,
           text: "Task #4.1",
-          start_date: "03-04-2023",
+          start_date: "22-02-2023",
           duration: "4",
           parent: "15",
           progress: 0.5,
@@ -136,7 +136,7 @@ export default {
         {
           id: 22,
           text: "Task #4.2",
-          start_date: "03-04-2023",
+          start_date: "21-02-2023",
           duration: "4",
           parent: "15",
           progress: 0.1,
@@ -234,9 +234,9 @@ export default {
       };
       //设置汉化
       gantt.i18n.setLocale("cn");
-      gantt.plugins({
-        tooltip: true,
-      });
+      // gantt.plugins({
+      //   // tooltip: true,
+      // });
       gantt.plugins({
         marker: true,
       }); //标记当前日期
@@ -254,6 +254,7 @@ export default {
       gantt.config.duration_step = 1;
       // gantt.config.time_step = 15;
       gantt.config.duration_unit = "minute";
+      gantt.config.details_on_dblclick = false; //open the lightbox after double clicking on a task
       gantt.config.scales = [
         // https://docs.dhtmlx.com/gantt/desktop__date_format.html
         // { unit: "year", date: " %Y年" },
@@ -294,16 +295,17 @@ export default {
       // };
       // gantt.getMarker(markerId);
       gantt.attachEvent("onTaskClick", function (id, e) {
-        console.log(id, e.target, "==id, e");
+        console.log(id, e, "==id, e");
+        const target = e.target;
         const buttons = e.target.closest("[data-action]");
         if (buttons) {
           const action = buttons.getAttribute("data-action");
           switch (action) {
             case "edit1":
-              _this.$emit("onTaskClick", { type: 2, id: id });
+              _this.$emit("onGanttTreeClick", { type: 2, id: id });
               break;
             case "add1":
-              _this.$emit("onTaskClick", { type: 1, id: id });
+              _this.$emit("onGanttTreeClick", { type: 1, id: id });
               break;
             case "delete":
               _this
@@ -314,8 +316,11 @@ export default {
                 })
                 .then(() => {
                   console.log("确定删除");
+                  _this.$emit("onGanttTreeClick", { type: 3, id: id });
                 })
-                .cancel(() => {});
+                .catch(() => {
+                  console.log("取消删除甘特图任务");
+                });
               // gantt.confirm({
               //   title: gantt.locale.labels.confirm_deleting_title,
               //   text: gantt.locale.labels.confirm_deleting,
@@ -332,6 +337,9 @@ export default {
               break;
           }
           return false;
+        }
+        if (target.className == "gantt_task_content") {
+          _this.$emit("onGanttTaskClick", { type: 3, id: id });
         }
         //any custom logic here
         return true;
