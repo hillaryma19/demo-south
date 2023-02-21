@@ -37,10 +37,11 @@ import {
 } from "ol/interaction.js";
 import { GPX, GeoJSON, IGC, KML, TopoJSON } from "ol/format.js";
 import { fromLonLat } from "ol/proj";
-import Drag from "./ol-drag.js";
+import Drag from "./drag.js";
 import mapFuns from "./map-funs.js";
+// import { draw, vector, raster } from "./draw.js";
 
-const locationImg = require("@/assets/img/car.png");
+const locationImg = require("@/assets/img/location.png");
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [GPX, GeoJSON, IGC, KML, TopoJSON],
 });
@@ -97,12 +98,18 @@ export default {
       event.preventDefault();
     },
     init() {
-      let projection = new Projection({
+      const _this = this;
+      const projection = new Projection({
         code: "EPSG:4326",
         units: "degrees",
         axisOrientation: "neu",
       });
-      const _this = this;
+      const xyz = new TileLayer({
+        source: new XYZ({
+          url: "http://t3.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=49ea1deec0ffd88ef13a3f69987e9a63",
+          wrapX: true,
+        }),
+      });
       this.image = new Image({
         source: new ImageWMS({
           //不能设置为0，否则地图不展示。
@@ -168,19 +175,14 @@ export default {
           dragAndDropInteraction,
           new Drag(),
         ]),
-        //interactions new Drag(),
-        layers: [
-          new TileLayer({
-            source: new XYZ({
-              url: "http://t3.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=49ea1deec0ffd88ef13a3f69987e9a63",
-              wrapX: true,
-            }),
-          }),
-        ],
+        //interactions new Drag(), draw: raster, vector
+        layers: [xyz],
         view: new View({
           projection: "EPSG:4326",
           center: [116.4, 39.9],
           zoom: 4,
+          minZoom: 1,
+          maxZoom: 18,
         }),
         //加载控件到地图容器中
         controls: defaultControls({
