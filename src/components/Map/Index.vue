@@ -55,9 +55,9 @@ const dragAndDropInteraction = new DragAndDrop({
 });
 const multiArray = [
   [116.495393, 39.950565],
-  [116.34419, 39.947025],
-  [116.328092, 39.900545],
-  [116.424103, 39.514645],
+  [109.68103788247656, 32.46230294495827],
+  [120.74812974880018, 29.260359882274035],
+  [93.44625568598238, 37.21947185582839],
 ];
 export default {
   props: {
@@ -112,7 +112,6 @@ export default {
         axisOrientation: "neu",
       });
       const _this = this;
-      const pointFeature = new Feature(new Point([116.403218, 39.92372]));
       this.image = new Image({
         source: new ImageWMS({
           //不能设置为0，否则地图不展示。
@@ -174,32 +173,14 @@ export default {
       });
       this.map = new Map({
         target: document.getElementById("map"),
-        interactions: defaultInteractions().extend([
-          dragAndDropInteraction,
-          new Drag(),
-        ]),
+        interactions: defaultInteractions().extend([dragAndDropInteraction]),
+        //interactions new Drag(),
         layers: [
           new TileLayer({
             source: new XYZ({
               url: "http://t3.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=49ea1deec0ffd88ef13a3f69987e9a63",
               wrapX: true,
             }),
-          }),
-
-          new VectorLayer({
-            source: new VectorSource({
-              features: [pointFeature],
-            }),
-            style: {
-              "icon-src": locationImg,
-              "icon-opacity": 0.95,
-              "icon-anchor": [0.5, 46],
-              "icon-anchor-x-units": "fraction",
-              "icon-anchor-y-units": "pixels",
-              "stroke-width": 3,
-              "stroke-color": [255, 0, 0, 1],
-              "fill-color": [0, 0, 255, 0.6],
-            },
           }),
         ],
         view: new View({
