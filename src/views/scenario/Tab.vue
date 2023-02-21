@@ -33,9 +33,9 @@ export default {
       tabs: [
         { id: "1", name: "想定信息" },
         { id: "2", name: "环境部署" },
-        // { id: "3", name: "想定编程/想定部署" },
-        { id: "6", name: "想定编程" },
-        { id: "7", name: "想定部署" },
+        { id: "3", name: "想定编程部署" },
+        // { id: "6", name: "想定编程" },
+        // { id: "7", name: "想定部署" },
         { id: "4", name: "编组编组" },
         { id: "5", name: "计划任务" },
       ],
@@ -59,21 +59,21 @@ export default {
         case "2":
           component = "CampTab";
           break;
-        // case "3":
-        //   component = "CampTab";
-        //   break;
+        case "3":
+          component = "CampTab";
+          break;
         case "4":
           component = "CampTab";
           break;
         case "5":
           component = "CampTab";
           break;
-        case "6":
-          component = "CampTab";
-          break;
-        case "7":
-          component = "CampTab";
-          break;
+        // case "6":
+        //   component = "CampTab";
+        //   break;
+        // case "7":
+        //   component = "CampTab";
+        // break;
         default:
           break;
       }

@@ -8,7 +8,8 @@ if (env == 'production') {
 } else if (env == 'test') {
     baseURL = '/v2/api-docs/';
 } else if (env == 'development') {
-    baseURL = '/feapi/v2/api-docs/'
+    // baseURL = '/feapi/v2/api-docs/'
+    baseURL = '/feapi/'
 }
 
 export default baseURL

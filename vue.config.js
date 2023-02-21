@@ -17,7 +17,7 @@ module.exports = defineConfig({
     },
     proxy: {
       '/feapi': {
-        target: 'http://192.168.1.200',
+        target: 'http://192.168.1.59:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/feapi': ""

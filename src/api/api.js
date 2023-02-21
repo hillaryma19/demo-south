@@ -4,7 +4,11 @@ import config from "@/service/config.js";
 const baseUrl1 = config.baseUrl.base;
 const baseUrl2 = config.poolUrl.pool;
 const baseUrl3 = config.poolUrl.map;
+//指挥-添加指挥人员
 // export default {
+//   hello: (params) => {
+//     return $http.$get(baseUrl1 + "/hello", params);
+//   },
 //   //指挥-查询所有人员
 //   commandStaffFindAll: (params) => {
 //     return $http.$get(baseUrl1 + "commandstaff/findAll", params);

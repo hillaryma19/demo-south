@@ -7,7 +7,7 @@
         :height="wrapperInnerHeight"
       ></Map>
       <!-- 左侧 -->
-      <div class="left-tree flex-row" ref="leftTree">
+      <div class="left-tree flex-row" ref="leftTree" v-show="activeName != 5">
         <div class="left-container">
           <div
             class="left-component"
@@ -67,12 +67,7 @@
         class="bottom-container"
         ref
         :style="{ width: `${bottomPanelWidth}px` }"
-        v-show="
-          activeName == 2 ||
-          activeName == 6 ||
-          activeName == 7 ||
-          activeName == 4
-        "
+        v-show="activeName != 1"
       >
         <div
           @mousedown="onVerticalMousedown"
@@ -89,11 +84,7 @@
             <div class="panel-tit-box flex-between">
               <div class="panel-title flex-start">
                 <span class="line"></span>
-                <span
-                  v-show="activeName == 2 || activeName == 6 || activeName == 7"
-                  >{{ bottomPanelTitle }}</span
-                >
-                <span v-show="activeName == 4">{{ bottomPanelTitle1 }}</span>
+                <span>{{ bottomPanelTitle }}</span>
               </div>
               <div class="fold-box2 pointer" @click="handleBottomFold">
                 <el-tooltip
@@ -113,19 +104,21 @@
               </div>
             </div>
             <div class="panel-content scroll-bar-style">
-              <environment-details
+              <component
+                :is="currentBottomComponent"
+                :active-name="activeName"
+                @changeView="changeView"
+              ></component>
+              <!-- <environment-details
                 v-show="activeName == 2 || activeName == 6 || activeName == 7"
               ></environment-details>
               <deploy-details v-show="activeName == 4"></deploy-details>
+              <plan v-show="activeName == 5"></plan> -->
             </div>
           </div>
         </div>
       </div>
     </div>
-    <right-panel
-      :drawer-data="drawerData"
-      @handleDrawerInfo="getDrawerInfo"
-    ></right-panel>
     <power-add
       :dialog-data="dialogData"
       @handleDialogInfo="getDialogInfo"
@@ -145,15 +138,14 @@ const GroupCommunicate = () =>
 const GroupUser = () => import("@/components/CampTabs/GroupUser.vue");
 const Scheme = () => import("@/components/CampTabs/Scheme.vue");
 const Plan = () => import("@/components/CampTabs/Plan.vue");
-const RightPanel = () => import("@/components/RightPanel/Index.vue");
 const PowerAdd = () => import("@/components/CampTabs/PowerAdd.vue");
 const Map = () => import("@/components/Map/Index.vue");
 const Environment = () => import("@/components/CampTabs/Environment.vue");
 const GroupTree = () => import("@/components/CampTabs/GroupTree.vue");
 const leftTitleArray = [
   "环境部署",
-  "想定编程",
-  "想定部署",
+  "想定编程部署",
+  // "想定部署",
   "想定编组",
   "计划任务",
 ];
@@ -163,7 +155,6 @@ export default {
   components: {
     DeployDetails,
     EnvironmentDetails,
-    RightPanel,
     PowerAdd,
     FormationTree,
     DeploymentTree,
@@ -197,6 +188,7 @@ export default {
       bottomPanelWidth: 420,
       bottomPanelHeight: 400,
       currentComponent: "Environment",
+      currentBottomComponent: "EnvironmentDetails",
       dialogData: {
         dialogVisible: false,
       },
@@ -293,7 +285,6 @@ export default {
       splitterVerticalMoveY: 0,
       leftTitle: leftTitleArray[0],
       bottomPanelTitle: "实体属性编辑",
-      bottomPanelTitle1: "编组详情",
     };
   },
   created() {
@@ -313,6 +304,7 @@ export default {
   },
   methods: {
     handleActiveName(val) {
+      console.log(val, "==vvv");
       let name = val,
         component = "";
       switch (name) {
@@ -320,31 +312,44 @@ export default {
           component = "Environment";
           this.leftTitle = leftTitleArray[0];
           this.leftPanelWidth = defaultLeftWidth;
+          this.bottomPanelTitle = "实体属性编辑";
+          this.currentBottomComponent = "EnvironmentDetails";
           break;
-        // case "3":
-        //   component = "Environment";
-        //   this.leftTitle = leftTitleArray[1];
-        //   break;
+        case "3":
+          component = "GroupTree";
+          this.leftTitle = leftTitleArray[1];
+          this.leftPanelWidth = defaultLeftWidth;
+          this.bottomPanelTitle = "实体属性编辑";
+          this.currentBottomComponent = "EnvironmentDetails";
+          break;
         case "4":
           component = "GroupTree";
           this.leftPanelWidth = defaultLeftWidth;
           this.leftTitle = leftTitleArray[3];
+          this.bottomPanelTitle = "编组详情";
+          this.currentBottomComponent = "DeployDetails";
           break;
         case "5":
-          component = "Plan";
+          component = "";
           this.leftTitle = leftTitleArray[4];
           this.leftPanelWidth = this.wrapperInnerWidth - 8;
+          this.bottomPanelTitle = "计划任务";
+          this.currentBottomComponent = "Plan";
           break;
-        case "6":
-          component = "GroupTree";
-          this.leftTitle = leftTitleArray[1];
-          this.leftPanelWidth = defaultLeftWidth;
-          break;
-        case "7":
-          component = "DeploymentTree";
-          this.leftTitle = leftTitleArray[2];
-          this.leftPanelWidth = defaultLeftWidth;
-          break;
+        // case "6":
+        //   component = "GroupTree";
+        //   this.leftTitle = leftTitleArray[1];
+        //   this.leftPanelWidth = defaultLeftWidth;
+        //   this.bottomPanelTitle = "实体属性编辑";
+        //   this.currentBottomComponent = "EnvironmentDetails";
+        //   break;
+        // case "7":
+        //   component = "DeploymentTree";
+        //   this.leftTitle = leftTitleArray[2];
+        //   this.leftPanelWidth = defaultLeftWidth;
+        //   this.bottomPanelTitle = "实体属性编辑";
+        //   this.currentBottomComponent = "EnvironmentDetails";
+        //   break;
         default:
           break;
       }

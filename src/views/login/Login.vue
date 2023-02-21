@@ -70,7 +70,7 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  padding-top: 24%;
+  padding-top: 22%;
   width: 400px;
   margin: 0 auto;
 }

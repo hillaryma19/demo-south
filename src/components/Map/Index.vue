@@ -17,7 +17,6 @@
 
 <script>
 import "ol/ol.css";
-// import { Map, View } from "ol";
 import Map from "ol/Map.js";
 import View from "ol/View.js";
 import { Overlay } from "ol";
@@ -26,7 +25,6 @@ import { Projection } from "ol/proj";
 import ImageWMS from "ol/source/ImageWMS";
 import Image from "ol/layer/Image";
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
-import Feature from "ol/Feature";
 //手绘地图以 WMTS （Web Map Tile Service, Web 地图瓦片形式）加载
 import { OSM, Vector as VectorSource, XYZ, WMTS } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
@@ -39,16 +37,9 @@ import {
 } from "ol/interaction.js";
 import { GPX, GeoJSON, IGC, KML, TopoJSON } from "ol/format.js";
 import { fromLonLat } from "ol/proj";
-import {
-  Style,
-  Fill,
-  Circle as CircleStyle,
-  Icon,
-  Stroke,
-  Text,
-} from "ol/style";
-import { LineString, Point, Polygon } from "ol/geom.js";
-import Drag from "@/utils/o-drag.js";
+import Drag from "./ol-drag.js";
+import mapFuns from "./map-funs.js";
+
 const locationImg = require("@/assets/img/car.png");
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [GPX, GeoJSON, IGC, KML, TopoJSON],
@@ -200,13 +191,10 @@ export default {
       this.addOverlay();
       this.addDragAndDrop();
       multiArray.forEach((item, index) => {
-        console.log(item, index, "==item, index");
-        this.createIcons({
-          name: "beijing" + index,
-          // coordinates: [116.403218, 39.92372],
-          coordinates: item,
-          index: index,
-        });
+        let id = index + 1,
+          name = "icon-" + index;
+        mapFuns.addIconLayer(id, name, locationImg, item);
+        mapFuns.addTextLayer(id, name, locationImg, item);
       });
       console.log(new Drag(), "==new Drag()");
     },
@@ -228,52 +216,6 @@ export default {
       window.map.addInteraction(this.drop);
       window.map.addLayer(layer);
     },
-    createClusterLabel(data) {
-      console.log(data.coordinates, "==data.coordinates");
-      let feature = new Feature({
-        title: data.name,
-        geometry: new Point(data.coordinates),
-      });
-      feature.setId("11");
-      feature.setStyle(
-        new Style({
-          image: new CircleStyle({
-            fill: new Fill({
-              color: "blue",
-            }),
-            radius: 10,
-          }),
-        })
-      );
-      let source = new VectorSource();
-      source.addFeature(feature);
-      let layer = new VectorLayer({
-        name: "test1",
-        title: "beijing",
-      });
-      layer.setSource(source);
-      window.map.addLayer(layer);
-    },
-    createIcons(data) {
-      let feature = new Feature({
-        type: "icon",
-        title: data.name,
-        geometry: new Point(data.coordinates),
-      });
-      let layer = null;
-      layer = new VectorLayer({
-        source: new VectorSource({
-          features: [feature],
-        }),
-        style: new Style({
-          image: new Icon({
-            anchor: [0.5, 1],
-            src: locationImg,
-          }),
-        }),
-      });
-      window.map.addLayer(layer);
-    },
     singleClick() {
       const _this = this;
       // this.$API.commandStaffFindAll({cp:1,rows:30}).then(res =>{})
@@ -285,7 +227,7 @@ export default {
         );
         if (feature) {
           const getTitle = feature.get("title");
-          if (getTitle && getTitle.indexOf("beijing") != -1) {
+          if (getTitle && getTitle.indexOf("-text") != -1) {
             // 设置弹窗位置
             let coordinates = feature.getGeometry().getCoordinates();
             _this.isPopupVisible = true;
@@ -296,6 +238,9 @@ export default {
         } else {
           _this.isPopupVisible = false;
         }
+      });
+      window.map.on("click", (e) => {
+        console.log(e, "=0999");
       });
       // window.map.once("pointerdrag", function (event) {
       //   console.log(event, "地图发生拖拽");
@@ -310,8 +255,8 @@ export default {
         element: elPopup,
         positioning: "bottom-center",
         stopEvent: false,
-        offset: [0, -20],
-        zIndex: 17,
+        offset: [0, -40],
+        zIndex: 8,
       });
       window.map.addOverlay(this.popupInfo);
     },
