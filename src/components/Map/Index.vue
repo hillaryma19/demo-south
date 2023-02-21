@@ -164,7 +164,10 @@ export default {
       });
       this.map = new Map({
         target: document.getElementById("map"),
-        interactions: defaultInteractions().extend([dragAndDropInteraction]),
+        interactions: defaultInteractions().extend([
+          dragAndDropInteraction,
+          new Drag(),
+        ]),
         //interactions new Drag(),
         layers: [
           new TileLayer({
@@ -193,7 +196,7 @@ export default {
       multiArray.forEach((item, index) => {
         let id = index + 1,
           name = "icon-" + index;
-        mapFuns.addIconLayer(id, name, locationImg, item);
+        // mapFuns.addIconLayer(id, name, locationImg, item);
         mapFuns.addTextLayer(id, name, locationImg, item);
       });
       console.log(new Drag(), "==new Drag()");

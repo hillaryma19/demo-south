@@ -332,9 +332,10 @@ export default {
         case "5":
           component = "";
           this.leftTitle = leftTitleArray[4];
-          this.leftPanelWidth = this.wrapperInnerWidth - 8;
+          this.leftPanelWidth = defaultLeftWidth;
           this.bottomPanelTitle = "计划任务";
           this.currentBottomComponent = "Plan";
+          this.bottomPanelWidth = this.wrapperInnerWidth;
           break;
         // case "6":
         //   component = "GroupTree";
@@ -373,8 +374,8 @@ export default {
     },
     onWindowResize() {
       this.$nextTick(() => {
-        let leftTree = this.$refs.leftTree;
-        let wrapperInner = this.$refs.wrapperInner;
+        let leftTree = this.$refs.leftTree,
+          wrapperInner = this.$refs.wrapperInner;
         if (wrapperInner) {
           this.wrapperInnerWidth = wrapperInner.offsetWidth;
           this.wrapperInnerHeight = wrapperInner.offsetHeight;
@@ -386,7 +387,12 @@ export default {
         if (leftTree) {
           this.leftTabWidth = leftTree.offsetWidth;
         }
-        this.bottomPanelWidth = this.wrapperInnerWidth - this.leftTabWidth - 8;
+        if (this.activeName == 5) {
+          this.bottomPanelWidth = this.wrapperInnerWidth;
+        } else {
+          this.bottomPanelWidth =
+            this.wrapperInnerWidth - this.leftTabWidth - 8;
+        }
       });
     },
     // 点击添加

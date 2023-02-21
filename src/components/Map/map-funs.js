@@ -36,9 +36,9 @@ function addTextLayer(id, title, url, coordinates) {
     geometry: new Point(coordinates), title: `${title}-text`
   })
   const style = new Style({
-    // image: new Icon({ src: url, scale: 1 }),
+    image: new Icon({ src: url, scale: 1 }),
     text: new Text({
-      fill: new Fill({ color: '#fff' }), font: '20px sans-serif', text: title, scale: [0.65, 0.65]
+      fill: new Fill({ color: '#fff' }), font: '20px sans-serif', text: title, scale: [0.65, 0.65], offsetY: 20
     })
   })
   const layer = new VectorLayer({
