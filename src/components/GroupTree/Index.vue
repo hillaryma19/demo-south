@@ -85,38 +85,6 @@
                         {{ node.label }}
                       </span>
                     </div>
-                    <!--                    <span v-if="data.flag != 2">-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleAdd(1, node, data)"-->
-                    <!--                    >-->
-                    <!--                      创建-->
-                    <!--                    </el-button>-->
-                    <!--                      &lt;!&ndash; <el-button-->
-                    <!--                      type="text"-->
-                    <!--                      size="small"-->
-                    <!--                      @click="() => handleAdd(2, node, data)"-->
-                    <!--                    >-->
-                    <!--                      编辑-->
-                    <!--                    </el-button> &ndash;&gt;-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleDel(node, data)"-->
-                    <!--                    >-->
-                    <!--                      删除-->
-                    <!--                    </el-button>-->
-                    <!--                  </span>-->
-                    <!--                    <span v-if="data.flag == 2">-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleDel(node, data)"-->
-                    <!--                    >-->
-                    <!--                      删除-->
-                    <!--                    </el-button>-->
-                    <!--                  </span>-->
                   </div>
                 </div>
               </el-tree>
@@ -373,8 +341,8 @@ export default {
             }
             if (this.isShift) {
               const len = node.parent.data.children.length;
-              let resultIndex = -1;
-              for (let i = len - 1; i > -1; i--) {
+              let resultIndex = 0;
+              for (let i = len - 1; i > 0; i--) {
                 if (node.parent.data.children[i].selected) {
                   resultIndex = i;
                   break;
@@ -382,7 +350,7 @@ export default {
               }
               if (resultIndex < index) {
                 for (let i = resultIndex; i <= index; i++) {
-                  console.log(node.parent.data.children.length, node.parent.data.children, 'data')
+                  console.log(node.parent.data.children.length, node.parent.data.children, i, 'data')
                   node.parent.data.children[i].selected = true;
                   this.$set(node.parent.data.children, i, node.parent.data.children[i]);
                 }
