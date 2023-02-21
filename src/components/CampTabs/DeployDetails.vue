@@ -6,22 +6,33 @@
       type="card"
       @tab-click="handleClick"
     >
-      <el-tab-pane label="指挥所" name="first">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-tab-pane
+        label="指挥所"
+        name="first"
+      >
+        <el-form
+          :inline="true"
+          :model="formInline"
+          class="demo-form-inline"
+        >
           <div class="title pad-lt-10">指挥所位置</div>
           <div class="ta-c">
             <div class="pad-bt-10">
               <el-form-item label="">
                 <el-radio-group v-model="formInline.radio">
-                  <el-radio :label="1" style="margin-right: 250px"
-                    >设施</el-radio
-                  >
+                  <el-radio
+                    :label="1"
+                    style="margin-right: 250px"
+                  >设施</el-radio>
                   <el-radio :label="2">力量</el-radio>
                 </el-radio-group>
               </el-form-item>
             </div>
             <div class="place place-mar pad-tp-10 pad-bt-10">
-              <div style="padding: 10% 0" v-show="formInline.radio == 1">
+              <div
+                style="padding: 10% 0"
+                v-show="formInline.radio == 1"
+              >
                 <el-form-item label=" 指挥所:">
                   <el-select
                     size="small"
@@ -58,7 +69,11 @@
           <div class="title pad-lt-10 rim">详情介绍</div>
           <div class="place-mar flex-between">
             <div>{{ formInline.sketch }}</div>
-            <img :src="formInline.deImg" width="200" height="250" />
+            <img
+              :src="formInline.deImg"
+              width="200"
+              height="250"
+            />
           </div>
           <div class="title pad-lt-10 rim">属性编辑</div>
           <div class="place-mar flex-column">
@@ -71,11 +86,14 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="船长度:">
-                <el-input
-                  v-model="formInline.shipLength"
-                  size="small"
-                  placeholder="审批人"
-                ></el-input>
+                <div class="flex-start form-pad">
+                  <el-input
+                    v-model="formInline.shipLength"
+                    size="small"
+                    placeholder="审批人"
+                  ></el-input>
+                  <span>米</span>
+                </div>
               </el-form-item>
             </div>
             <div>
@@ -135,7 +153,7 @@
               <el-tooltip
                 class="pad-tp-10"
                 effect="dark"
-                content="添加编组"
+                content="添加力量"
                 placement="top"
               >
                 <i
@@ -172,7 +190,7 @@
               <el-tooltip
                 class="pad-tp-10"
                 effect="dark"
-                content="添加编组"
+                content="添加力量"
                 placement="top"
               >
                 <i
@@ -193,11 +211,17 @@
             </div>
           </div>
           <div class="ta-c pad-tp-10 rim">
-            <el-button type="primary" size="small">保存</el-button>
+            <el-button
+              type="primary"
+              size="small"
+            >保存</el-button>
           </div>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="下辖力量" name="second">
+      <el-tab-pane
+        label="下辖力量"
+        name="second"
+      >
         <div class="pad-bt-10 flex-end">
           <div>
             <el-button
@@ -223,36 +247,48 @@
           element-loading-background="rgba(0, 0, 0, 0.8)"
           style="width: 100%"
         >
-          <el-table-column prop="name" label="力量名称" min-width="60">
+          <el-table-column
+            prop="name"
+            label="力量名称"
+            min-width="60"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="力量描述" min-width="80">
+          <el-table-column
+            prop="address"
+            label="力量描述"
+            min-width="80"
+          >
           </el-table-column>
-          <el-table-column label="操作" min-width="50">
+          <el-table-column
+            label="操作"
+            min-width="50"
+          >
             <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
                 @click="handleAddPower(2, scope.row)"
-                >编辑</el-button
-              >
-              <el-button type="text" size="small" @click="handleDel(scope.row)"
-                >删除</el-button
-              >
+              >编辑</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleDel(scope.row)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-pagination
-            style="text-align: center;margin:15px 0;"
-            small
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="cp"
-            :page-size="rows"
-            layout="prev, pager, next"
-            :total="1000"
+          style="text-align: center;margin:15px 0;"
+          small
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="cp"
+          :page-size="rows"
+          layout="prev, pager, next"
+          :total="1000"
         >
         </el-pagination>
       </el-tab-pane>
