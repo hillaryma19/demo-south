@@ -85,38 +85,6 @@
                         {{ node.label }}
                       </span>
                     </div>
-                    <!--                    <span v-if="data.flag != 2">-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleAdd(1, node, data)"-->
-                    <!--                    >-->
-                    <!--                      创建-->
-                    <!--                    </el-button>-->
-                    <!--                      &lt;!&ndash; <el-button-->
-                    <!--                      type="text"-->
-                    <!--                      size="small"-->
-                    <!--                      @click="() => handleAdd(2, node, data)"-->
-                    <!--                    >-->
-                    <!--                      编辑-->
-                    <!--                    </el-button> &ndash;&gt;-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleDel(node, data)"-->
-                    <!--                    >-->
-                    <!--                      删除-->
-                    <!--                    </el-button>-->
-                    <!--                  </span>-->
-                    <!--                    <span v-if="data.flag == 2">-->
-                    <!--                    <el-button-->
-                    <!--                        type="text"-->
-                    <!--                        size="small"-->
-                    <!--                        @click="() => handleDel(node, data)"-->
-                    <!--                    >-->
-                    <!--                      删除-->
-                    <!--                    </el-button>-->
-                    <!--                  </span>-->
                   </div>
                 </div>
               </el-tree>
