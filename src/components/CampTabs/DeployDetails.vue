@@ -184,7 +184,7 @@
                 suffix-icon="el-icon-search"
                 v-model="people"
                 size="small"
-                style="width: 27%"
+                style="width: 31%"
             >
             </el-input>
             <div>
@@ -211,68 +211,97 @@
                   class="tree-line"
                   draggable
               >
-        <span
-            class="custom-tree-node"
-            style="justify-content: flex-start"
-            slot-scope="{ node, data }"
-        >
-          <span>{{ node.label }}</span>
-          <span style="margin-left: 10px;">
-            <el-button type="text"
-                       class="el-icon-circle-plus-outline tree-icon"
-                       style="font-size: 12px;"
-                       @click="() => handleNodeClick(data, 2)"
-            >
-              分配力量
-            </el-button>
-            <el-dialog
-                title="分配力量"
-                :visible.sync="dialogVisible"
-                width="30%"
-                :before-close="handleClose">
-                <div
-                    class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
-                    style="flex-wrap: nowrap; align-items: center"
+                <span
+                    class="custom-tree-node"
+                    style="justify-content: flex-start"
+                    slot-scope="{ node, data }"
                 >
-                      <el-input
-                          placeholder="请输入搜索内容"
-                          suffix-icon="el-icon-search"
-                          v-model="people"
-                          size="small"
-                          style="width: 55%"
-                      >
-                      </el-input>
-                      <div style="margin-right: 8%">
-                        <el-tooltip
-                            class="pad-tp-10"
-                            effect="dark"
-                            content="添加力量"
-                            placement="top"
-                        >
-                          <i
-                              class="pointer add-btn el-icon-circle-plus-outline"
-                              @click="handleAddMarshal(1)"
-                              style="font-size: 18px; padding-left: 16px"
-                          ></i>
-                        </el-tooltip>
-                        <el-tree
-                            :data="treeData"
-                            :props="defaultProps"
-                            :expand-on-click-node="false"
-                            default-expand-all
-                            class="tree-line"
-                            :indent="0"
-                        >
-                        </el-tree>
-                      </div>
-                    </div>
-                <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button size="small" type="primary" @click="dialogVisible = false">确 定</el-button>
-               </span>
-           </el-dialog>
+                  <span>{{ node.label }}</span>
+                   <span style="margin-left: 10px;">
+                  <span v-if="node.level >= 3">
+            <i
+                class="el-icon-edit tree-icon"
+                @click="() => handleAddMarshal(2, data)"
+            ></i>
+            <i
+                class="el-icon-remove-outline tree-icon"
+                @click="() => handleNodeClick(data, 2)"
+            ></i>
+            <i
+                class="el-icon-circle-plus-outline tree-icon"
+                @click="() => handleAddMarshal(1, data)"
+            ></i>
           </span>
-         </span>
+                     <span>
+                       <i v-if="node.level < 3" class="el-icon-circle-plus-outline"></i>
+                         <el-button
+                             type="text"
+                             class="tree-icon"
+                             style="font-size: 12px;margin-left: 3px;"
+                             @click="handleManClick"
+                         >
+                      分配力量
+                    </el-button>
+                     </span>
+                    <el-dialog
+                        title="分配力量"
+                        :visible.sync="dialogVisible"
+                        width="30%"
+                        :before-close="handleClose"
+                    >
+                      <div
+                          class="place-mar tree-iframe flex-center scroll-bar-style flex-column"
+                          style="flex-wrap: nowrap; align-items: center"
+                      >
+                        <el-input
+                            placeholder="请输入搜索内容"
+                            suffix-icon="el-icon-search"
+                            v-model="people"
+                            size="small"
+                            style="width: 60%"
+                        >
+                        </el-input>
+                        <div style="margin-right: 8%">
+                          <el-tooltip
+                              class="pad-tp-10"
+                              effect="dark"
+                              content="添加力量"
+                              placement="top"
+                          >
+                            <i
+                                class="pointer add-btn el-icon-circle-plus-outline"
+                                @click="handleAddMarshal(1)"
+                                style="font-size: 18px; padding-left: 16px"
+                            ></i>
+                          </el-tooltip>
+                          <el-tree
+                              :data="treeData"
+                              :props="defaultProps"
+                              :expand-on-click-node="false"
+                              default-expand-all
+                              class="tree-line"
+                              :indent="0"
+                          >
+                          </el-tree>
+                        </div>
+                      </div>
+                      <span
+                          slot="footer"
+                          class="dialog-footer"
+                      >
+                        <el-button
+                            size="small"
+                            @click="dialogVisible = false"
+                        >取 消</el-button>
+                        <el-button
+                            size="small"
+                            type="primary"
+                            @click="dialogVisible = false"
+                        >确 定</el-button>
+                      </span>
+                    </el-dialog>
+                  </span>
+                </span>
               </el-tree>
             </div>
           </div>
@@ -589,17 +618,19 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     handleNodeClick(data, type) {
-      // if (type == 1) {
-      //   this.groupDialogData.dialogVisible = true;
-      //   this.groupDialogData.dialogType = 2;
-      //   this.groupDialogData.id = data.label;
-      // } else if (type == 2) {
-      //   this.handleDel(data);
-      // }
+      if (type == 1) {
+        this.groupDialogData.dialogVisible = true;
+        this.groupDialogData.dialogType = 2;
+        this.groupDialogData.id = data.label;
+      } else if (type == 2) {
+        this.handleDel(data);
+      }
+    },
+    handleManClick() {
       this.dialogVisible = true;
     },
-    handleClose() {
-
+    handleClose(done) {
+      done();
     },
     // 点击添加下辖力量
     handleAdd() {
