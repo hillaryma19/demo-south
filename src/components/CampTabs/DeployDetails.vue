@@ -184,7 +184,7 @@
                 suffix-icon="el-icon-search"
                 v-model="people"
                 size="small"
-                style="width: 31%"
+                style="width: 27%"
             >
             </el-input>
             <div>
@@ -261,7 +261,7 @@
                             style="width: 60%"
                         >
                         </el-input>
-                        <div style="margin-right: 8%">
+                        <div style="margin-right: 16%">
                           <el-tooltip
                               class="pad-tp-10"
                               effect="dark"

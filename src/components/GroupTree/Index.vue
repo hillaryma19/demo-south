@@ -356,7 +356,7 @@ export default {
                 }
               } else {
                 for (let i = index; i <= resultIndex; i++) {
-                  node.parent.data.children[i].selected = true;
+                  node.parent.data.children[i].selected = !node.parent.data.children[i].selected;
                   this.$set(node.parent.data.children, i, node.parent.data.children[i]);
                 }
               }
