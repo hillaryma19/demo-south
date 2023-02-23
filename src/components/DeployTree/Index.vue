@@ -21,15 +21,24 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span v-if="!data.children">
-            <el-button
+            <!-- <el-button
               type="primary"
               size="mini"
               plain
               draggable
               @dragstart="onDragStart($event, data)"
+              @dragend="onDragEnd($event, data)"
             >
               部署
-            </el-button>
+            </el-button> -->
+            <div
+              class="deploy-btn"
+              draggable
+              @dragstart="onDragStart($event, scope.row)"
+              @dragend="onDragEnd($event)"
+            >
+              部署
+            </div>
             <!-- @click="() => handleDeploy(data)" -->
           </span>
         </span></el-tree
@@ -121,7 +130,12 @@ export default {
     onDragStart(event, item) {
       // event.dataTransfer.setData("currentId", item.id);
       event.dataTransfer.setData("currentName", item.label);
-      console.log(event, "==onDragStart");
+      console.log(event, "==onDragStart---");
+    },
+    onDragEnd(event, item) {
+      // event.dataTransfer.setData("currentId", item.id);
+      event.dataTransfer.getData("currentName");
+      console.log(event, "==onDragEndonDragEndonDragEnd");
     },
     getDialogInfo() {
       this.dialogData.dialogVisible = false;

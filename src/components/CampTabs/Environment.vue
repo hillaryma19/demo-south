@@ -34,14 +34,15 @@
           </el-table-column>
           <el-table-column align="center" label="操作" min-width="50">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                size="mini"
-                plain
+              <div
+                class="deploy-btn"
                 draggable
                 @dragstart="onDragStart($event, scope.row)"
-                >部署</el-button
+                @dragend="onDragEnd($event)"
               >
+                部署
+              </div>
+              <!-- <el-button type="primary" size="mini" plain>部署</el-button> -->
               <!-- @click="handleDeploy(scope.row)" -->
             </template>
           </el-table-column>
@@ -63,6 +64,8 @@
   </div>
 </template>
 <script>
+import mapFuns from "@/utils/map/js/map-funs.js";
+const locationImg = require("@/assets/img/location.png");
 export default {
   name: "EnvironmentDeploy",
   data() {
@@ -73,26 +76,31 @@ export default {
       tableHeight: 200,
       tableData: [
         {
+          id: 1,
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
         },
         {
+          id: 2,
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄",
         },
         {
+          id: 3,
           date: "2016-05-01",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1519 弄",
         },
         {
+          id: 4,
           date: "2016-05-03",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1516 弄",
         },
       ],
+      dragData: {},
     };
   },
   mounted() {
@@ -106,6 +114,32 @@ export default {
     }
   },
   methods: {
+    onDragStart(event, item) {
+      // event.dataTransfer.setData("currentId", item.id);
+      event.dataTransfer.setData("currentName", item.name);
+      this.dragData = item;
+    },
+    onDragEnd(evt) {
+      const event = evt;
+      const eX = event.clientX;
+      const eY = event.clientY;
+      const target = event.target;
+      const tx = target.offsetWidth + target.offsetLeft;
+      const ty = target.offsetHeight + target.offsetTop;
+      const x = eX - tx;
+      const y = eY - ty - 50;
+      // event.dataTransfer.setData("currentId", item.id);
+      // const name = event.dataTransfer.getData("currentName");
+      const coordinates = window.map.getCoordinateFromPixel([x, y]);
+      console.log(event, coordinates, x, y, "==coordinates");
+      mapFuns.addTextLayer(
+        this.dragData.id,
+        this.dragData.name,
+        locationImg,
+        coordinates,
+        "facility"
+      );
+    },
     onWindowResize() {
       this.$nextTick(() => {
         let tabpanel = this.$refs.tabpanel;

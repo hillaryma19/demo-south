@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- @drop.prevent="onDrop($event)" @dragover.prevent -->
     <div class="inner clearfix" ref="wrapperInner">
       <!-- 地图 -->
       <Map
@@ -130,7 +131,7 @@
 import EnvironmentDetails from "@/components/CampTabs/EnvironmentDetails";
 import DeployDetails from "@/components/CampTabs/DeployDetails";
 const FormationTree = () => import("@/components/CampTabs/FormationTree.vue");
-const DeploymentTree = () => import("@/components/CampTabs/DeploymentTree.vue");
+// const DeploymentTree = () => import("@/components/CampTabs/DeploymentTree.vue");
 const GroupPower = () => import("@/components/CampTabs/GroupPower.vue");
 const GroupAuth = () => import("@/components/CampTabs/GroupAuth.vue");
 const GroupCommunicate = () =>
@@ -157,7 +158,7 @@ export default {
     EnvironmentDetails,
     PowerAdd,
     FormationTree,
-    DeploymentTree,
+    // DeploymentTree,
     GroupTree,
     Scheme,
     Plan,
@@ -361,10 +362,8 @@ export default {
       this.isDragHover = false;
       // console.log(event, "==onDragStart");
     },
-    onDrop(event, node, data) {
-      this.isDragging = false;
-      this.isDragHover = false;
-      // console.log(event, node, data, "==onDrop");
+    onDrop(event) {
+      console.log(event, "==onDrop");
     },
     onDragOver(event) {
       event.preventDefault();

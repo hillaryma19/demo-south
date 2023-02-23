@@ -1,17 +1,11 @@
 <template>
-  <div
-    class="map-wrapper"
-    @drop="onDrop($event)"
-    @dragover="onDragOver($event)"
-    @dragleave="onDragLeave($event)"
-  >
+  <div class="map-wrapper">
     <div
       id="map"
       class="map"
       :style="{ width: '100%', height: `${height}px` }"
     ></div>
     <div class="popup" ref="popInfo" v-show="isPopupVisible">弹框</div>
-    <div id="year"></div>
   </div>
 </template>
 
@@ -32,21 +26,12 @@ import * as turf from "@/utils/turf";
 import {
   DragAndDrop,
   DragPan,
-  Pointer as PointerInteraction,
   defaults as defaultInteractions,
 } from "ol/interaction.js";
-import {
-  Fill,
-  Icon,
-  Style,
-  Text,
-  Circle as CircleStyle,
-  Stroke,
-} from "ol/style";
 import { GPX, GeoJSON, IGC, KML, TopoJSON } from "ol/format.js";
 import { fromLonLat } from "ol/proj";
-import Drag from "./js/drag.js";
-import mapFuns from "./js/map-funs.js";
+import Drag from "@/utils/map/js/drag.js";
+import mapFuns from "@/utils/map/js/map-funs.js";
 // import { draw, vector, raster } from "./draw.js";
 const locationImg = require("@/assets/img/location.png");
 const dragAndDropInteraction = new DragAndDrop({
@@ -82,29 +67,6 @@ export default {
     });
   },
   methods: {
-    onDrop(event) {
-      console.log(event, "==node, data");
-      this.dropEvent = event;
-      const name = event.dataTransfer.getData("currentName");
-      let pan = null;
-      window.map.getInteractions().forEach((element) => {
-        if (element instanceof DragPan) {
-          pan = element;
-        }
-      });
-      console.log(
-        pan,
-        this.drop,
-        fromLonLat([event.clientX, event.clientY]),
-        "==pan"
-      );
-    },
-    onDragOver(event) {
-      event.preventDefault();
-    },
-    onDragLeave(event) {
-      event.preventDefault();
-    },
     init() {
       const _this = this;
       const projection = new Projection({
@@ -234,6 +196,12 @@ export default {
       const _this = this;
       // this.$API.commandStaffFindAll({cp:1,rows:30}).then(res =>{})
       window.map.on("singleclick", (e) => {
+        console.log(
+          e,
+          e.coordinate,
+          window.map.getPixelFromCoordinate(e.coordinate),
+          "===singleClick"
+        );
         let feature = window.map.forEachFeatureAtPixel(
           e.pixel,
           (feature) => feature
@@ -274,9 +242,9 @@ export default {
               if (txt) {
                 const textFill = txt.getFill();
                 textFill.setColor("#fff");
+                item.changed();
               }
             });
-          item.changed();
         }
       });
     },
@@ -300,15 +268,6 @@ export default {
 .map-wrapper {
   width: 100%;
   height: 100%;
-  #year {
-    position: absolute;
-    bottom: 1em;
-    left: 1em;
-    color: white;
-    -webkit-text-stroke: 1px black;
-    font-size: 2em;
-    font-weight: bold;
-  }
   #map {
     width: 100%;
     height: 100%;

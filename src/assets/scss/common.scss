@@ -415,3 +415,19 @@ html, body{
   text-overflow: ellipsis;
 }
 /* gantt end */
+
+.deploy-btn {
+  padding: 0 6px;
+  color: #409eff;
+  transition: 0.1s;
+  font-weight: 500;
+  border-radius: 4px;
+  border: 1px solid #b3d8ff;
+  background: #ecf5ff;
+  &:active &:focus,
+  &:hover {
+    color: #fff;
+    background-color: #409eff;
+    border-color: #409eff;
+  }
+}
