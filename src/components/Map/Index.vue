@@ -5,7 +5,13 @@
       class="map"
       :style="{ width: '100%', height: `${height}px` }"
     ></div>
-    <div class="popup" ref="popInfo" v-show="isPopupVisible">弹框</div>
+    <div class="popup" ref="popInfo" v-show="popupVisible">
+      <div class="pop-top pad-bt-10 flex-between">
+        <div class="title">弹框标题</div>
+        <div class="el-icon-close pointer" @click="handleClosePop"></div>
+      </div>
+      <div class="pop-content pad-tp-5 scroll-bar-style">弹框内容</div>
+    </div>
   </div>
 </template>
 
@@ -55,7 +61,7 @@ export default {
     return {
       map: null,
       image: null,
-      isPopupVisible: false,
+      popupVisible: false,
       popupInfo: null,
       dropEvent: null,
       drop: null,
@@ -215,14 +221,14 @@ export default {
             // 设置弹窗位置
             let coordinates = feature.getGeometry().getCoordinates();
             textFill.setColor("#000");
-            _this.isPopupVisible = true;
+            _this.popupVisible = true;
             _this.popupInfo.setPosition(coordinates);
             mapFuns.setCenter(coordinates);
           } else {
-            _this.isPopupVisible = false;
+            // _this.popupVisible = false;
           }
         } else {
-          _this.isPopupVisible = false;
+          // _this.popupVisible = false;
         }
       });
       // window.map.once("pointerdrag", function (event) {
@@ -261,6 +267,9 @@ export default {
       });
       window.map.addOverlay(this.popupInfo);
     },
+    handleClosePop() {
+      this.popupVisible = false;
+    },
   },
 };
 </script>
@@ -274,8 +283,17 @@ export default {
   }
   .popup {
     width: 200px;
-    height: 200px;
+    height: auto;
+    border-radius: 4px;
+    padding: 12px;
     background-color: lightgreen;
+    .pop-top {
+      border-bottom: 1px solid #dcdfe6;
+    }
+    .pop-content {
+      max-height: 300px;
+      line-height: 22px;
+    }
   }
 }
 </style>
