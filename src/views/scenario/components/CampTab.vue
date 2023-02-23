@@ -304,7 +304,6 @@ export default {
   },
   methods: {
     handleActiveName(val) {
-      console.log(val, "==vvv");
       let name = val,
         component = "";
       switch (name) {

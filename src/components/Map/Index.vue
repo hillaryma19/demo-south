@@ -26,7 +26,7 @@ import ImageWMS from "ol/source/ImageWMS";
 import Image from "ol/layer/Image";
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
 //手绘地图以 WMTS （Web Map Tile Service, Web 地图瓦片形式）加载
-import { OSM, Vector as VectorSource, XYZ, WMTS } from "ol/source.js";
+import { Vector as VectorSource, XYZ, WMTS } from "ol/source.js";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer.js";
 import * as turf from "@/utils/turf";
 import {
@@ -35,12 +35,19 @@ import {
   Pointer as PointerInteraction,
   defaults as defaultInteractions,
 } from "ol/interaction.js";
+import {
+  Fill,
+  Icon,
+  Style,
+  Text,
+  Circle as CircleStyle,
+  Stroke,
+} from "ol/style";
 import { GPX, GeoJSON, IGC, KML, TopoJSON } from "ol/format.js";
 import { fromLonLat } from "ol/proj";
-import Drag from "./drag.js";
-import mapFuns from "./map-funs.js";
+import Drag from "./js/drag.js";
+import mapFuns from "./js/map-funs.js";
 // import { draw, vector, raster } from "./draw.js";
-
 const locationImg = require("@/assets/img/location.png");
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [GPX, GeoJSON, IGC, KML, TopoJSON],
@@ -51,6 +58,7 @@ const multiArray = [
   [120.74812974880018, 29.260359882274035],
   [93.44625568598238, 37.21947185582839],
 ];
+window.map = null;
 export default {
   props: {
     height: {
@@ -192,16 +200,17 @@ export default {
         }),
       });
       window.map = this.map;
-      this.singleClick(); //绑定地图点击事件
-      this.addOverlay();
-      this.addDragAndDrop();
       multiArray.forEach((item, index) => {
         let id = index + 1,
           name = "icon-" + index;
         // mapFuns.addIconLayer(id, name, locationImg, item);
-        mapFuns.addTextLayer(id, name, locationImg, item);
+        mapFuns.addTextLayer(id, name, locationImg, item, "facility");
       });
-      console.log(new Drag(), "==new Drag()");
+      this.singleClick(); //绑定地图点击事件
+      this.addOverlay();
+      // this.addDragAndDrop();
+      mapFuns.renderGif();
+      // mapFuns.interactionSnapAndDraw();
     },
     addDragAndDrop() {
       const _this = this;
@@ -225,18 +234,22 @@ export default {
       const _this = this;
       // this.$API.commandStaffFindAll({cp:1,rows:30}).then(res =>{})
       window.map.on("singleclick", (e) => {
-        console.log(e, e.coordinate, "==console.log(e.coordinate)");
         let feature = window.map.forEachFeatureAtPixel(
           e.pixel,
           (feature) => feature
         );
+        this.initLayers();
         if (feature) {
+          // let id = feature.id;
           const getTitle = feature.get("title");
-          if (getTitle && getTitle.indexOf("-text") != -1) {
+          const textFill = feature.getStyle().getText().getFill();
+          if (getTitle && getTitle.indexOf("-facility") != -1) {
             // 设置弹窗位置
             let coordinates = feature.getGeometry().getCoordinates();
+            textFill.setColor("#000");
             _this.isPopupVisible = true;
             _this.popupInfo.setPosition(coordinates);
+            mapFuns.setCenter(coordinates);
           } else {
             _this.isPopupVisible = false;
           }
@@ -244,13 +257,28 @@ export default {
           _this.isPopupVisible = false;
         }
       });
-      window.map.on("click", (e) => {
-        console.log(e, "=0999");
-      });
       // window.map.once("pointerdrag", function (event) {
       //   console.log(event, "地图发生拖拽");
       //   console.log("pointerdrag事件注销");
       // });
+    },
+    initLayers() {
+      const getLayersArray = window.map.getAllLayers();
+      getLayersArray.forEach((item) => {
+        if (item.get("name")) {
+          item
+            .getSource()
+            .getFeatures()
+            .forEach((feature) => {
+              const txt = feature.getStyle().getText();
+              if (txt) {
+                const textFill = txt.getFill();
+                textFill.setColor("#fff");
+              }
+            });
+          item.changed();
+        }
+      });
     },
     // 创建Overlay
     addOverlay() {
@@ -260,7 +288,7 @@ export default {
         element: elPopup,
         positioning: "bottom-center",
         stopEvent: false,
-        offset: [0, -40],
+        offset: [0, -30],
         zIndex: 8,
       });
       window.map.addOverlay(this.popupInfo);
