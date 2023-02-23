@@ -57,6 +57,10 @@
                   default-expand-all
                   :indent="0"
                   class="tree-line"
+                  ref="tree2"
+                  draggable
+                  @node-drag-start="handleDragstart"
+                  @node-drag-end="handleDragend"
               >
                 <div
                     class="custom-tree-container"
@@ -93,7 +97,7 @@
         </el-popover>
       </div>
       <el-tree
-          ref="tree"
+          ref="tree1"
           :data="treeData"
           :props="defaultProps"
           :expand-on-click-node="false"
@@ -121,7 +125,9 @@
                 class="el-icon-circle-plus-outline tree-icon"
                 @click="() => handleAddMarshal(1, data)"
             ></i>
-          </span> </span></el-tree>
+          </span>
+        </span>
+      </el-tree>
     </div>
     <group-add
         :dialog-data="groupDialogData"
@@ -337,6 +343,9 @@ export default {
             if (this.isCtrl) {
               data.selected = !data.selected;
               this.$set(node.parent.data.children, index, data);
+              // let arr = [];
+              // arr.push(data);
+              // console.log(arr, 'arr');
               console.log(data.selected, data.$treeNodeId, node.id, '3')
             }
             if (this.isShift) {
@@ -361,6 +370,7 @@ export default {
                 }
               }
             }
+
           }
         }
       })
@@ -431,6 +441,27 @@ export default {
       this.isDragHover = false;
       event.target.style.background = "";
       // console.log(event, "==onDragLeave");
+    },
+    handleDragstart(node, event) {
+      this.$refs.tree2.$emit('tree-node-drag-start', event, {node: node});
+    },
+    handleDragend(draggingNode, endNode, position, event) {
+      // 插入一个空节点用于占位
+      let emptyData = {id: (+new Date), children: []};
+      this.$refs.tree1.insertBefore(emptyData, draggingNode);
+
+      this.$refs.tree2.$emit('tree-node-drag-end', event);
+      this.$nextTick(() => {
+        // 如果是移动到了当前树上，需要清掉空节点
+        if (this.$refs.tree1.getNode(draggingNode.data)) {
+          this.$refs.tree1.remove(emptyData);
+        } else {
+          // 如果移动到了别的树上，需要恢复该节点，并清掉空节点
+          let data = JSON.parse(JSON.stringify(draggingNode.data));
+          this.$refs.tree1.insertAfter(data, this.$refs.tree1.getNode(emptyData));
+          this.$refs.tree1.remove(emptyData);
+        }
+      })
     },
   },
 };

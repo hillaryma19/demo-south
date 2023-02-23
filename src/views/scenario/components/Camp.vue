@@ -4,16 +4,17 @@
       <div class="title pad-lt-10">阵营管理</div>
       <div class="list" style="display: flex">
         <div
-          class="tag"
-          :key="tag.id"
-          v-for="(tag, index) in dynamicTags"
-          :style="{ backgroundColor: tag.color }"
+            class="tag"
+            :key="tag.id"
+            v-for="(tag, index) in dynamicTags"
+            :style="{ backgroundColor: tag.color }"
         >
           {{ tag.name }}
           <i class="el-icon-close" @click="handleTagClose(tag, index)"></i>
         </div>
         <el-button class="button-new-tag" size="small" @click="showInput"
-          >+</el-button
+        >+
+        </el-button
         >
         <!-- <el-tag
           :key="tag"
@@ -45,69 +46,69 @@
         <div>阵营关系</div>
         <div>
           <i
-            class="icon-camp el-icon-s-grid"
-            :class="{ active: listType == 1 }"
-            @click="handleIconCampClick(1)"
+              class="icon-camp el-icon-s-grid"
+              :class="{ active: listType == 1 }"
+              @click="handleIconCampClick(1)"
           ></i
           ><i
             class="icon-camp el-icon-date"
             :class="{ active: listType == 2 }"
             @click="handleIconCampClick(2)"
-          ></i>
+        ></i>
         </div>
       </div>
       <div class="list">
         <div class="list-1" v-show="listType == 1">
           <ul class="metrix-ul metrix-ul-horizon flex-row">
             <li
-              v-for="item in dynamicTags"
-              :key="item.id"
-              :style="{ backgroundColor: item.color }"
+                v-for="item in dynamicTags"
+                :key="item.id"
+                :style="{ backgroundColor: item.color }"
             >
               {{ item.name }}
             </li>
           </ul>
           <ul class="metrix-ul-vertical flex-column">
             <li
-              v-for="(item, pindex) in dynamicTags"
-              :key="item.id"
-              class="flex-start"
+                v-for="(item, pindex) in dynamicTags"
+                :key="item.id"
+                class="flex-start"
             >
               <div
-                class="vertical-item"
-                :style="{ backgroundColor: item.color }"
+                  class="vertical-item"
+                  :style="{ backgroundColor: item.color }"
               >
                 {{ item.name }}
               </div>
               <div class="metrix-relationship0 metrix-relationship flex-row">
                 <div
-                  v-for="(child, index) in item.children"
-                  :key="child.id"
-                  :data-id="child.select.value"
+                    v-for="(child, index) in item.children"
+                    :key="child.id"
+                    :data-id="child.select.value"
                 >
-                  <span v-if="child.relationship == '--'">{{
-                    child.relationship
-                  }}</span>
+                  <span v-if="child.relationship == '--'">
+                    {{ child.relationship }}
+                  </span>
                   <el-select
-                    v-else
-                    :value="index"
-                    size="small"
-                    v-model="child.name"
-                    placeholder="请选择"
-                    @change="
+                      v-else
+                      size="small"
+                      v-model="child.select.ol[child.name]"
+                      placeholder="请选择"
+                      @change="
                       handleRelationChange(
                         $event,
                         pindex,
                         index,
-                        child.relationship
+                        child.relationship,
+                        child.select
                       )
                     "
                   >
                     <el-option
-                      v-for="o in child.select.options"
-                      :key="o.value"
-                      :label="o.label"
-                      :value="o.value"
+                        v-for="o in child.select.options"
+                        :key="o.value"
+                        :label="o.label"
+                        :value="o.value"
                     >
                     </el-option>
                   </el-select>
@@ -117,36 +118,37 @@
           </ul>
         </div>
         <el-table
-          v-show="listType == 2"
-          :data="tableData"
-          :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
-          size="small"
-          border
-          align="center"
-          highlight-current-row
-          tooltip-effect="dark"
-          v-loading="loading"
-          element-loading-text="加载中"
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          style="width: 100%"
+            v-show="listType == 2"
+            :data="tableData"
+            :header-cell-style="{ background: '#f5f7fa', color: '#94969A' }"
+            size="small"
+            border
+            align="center"
+            highlight-current-row
+            tooltip-effect="dark"
+            v-loading="loading"
+            element-loading-text="加载中"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.8)"
+            style="width: 100%"
         >
           <el-table-column prop="name1" label="方别1" min-width="180">
           </el-table-column>
           <el-table-column prop="name2" label="方别1" min-width="180">
           </el-table-column>
           <el-table-column prop="relationship" label="关系" min-width="180"
-            ><template slot-scope="scope">
+          >
+            <template slot-scope="scope">
               <el-select
-                v-model="scope.row.relationship"
-                size="small"
-                placeholder="请选择"
+                  v-model="scope.row.relationship"
+                  size="small"
+                  placeholder="请选择"
               >
                 <el-option
-                  v-for="item in relationshipOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                    v-for="item in relationshipOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -156,10 +158,11 @@
             <template slot-scope="scope">
               <!--              <el-button type="text" size="small" @click="editCampRelation(scope.row)">编辑</el-button>-->
               <el-button
-                type="text"
-                size="small"
-                @click="removeCampRelation(scope.row)"
-                >删除</el-button
+                  type="text"
+                  size="small"
+                  @click="removeCampRelation(scope.row)"
+              >删除
+              </el-button
               >
             </template>
           </el-table-column>
@@ -167,25 +170,19 @@
       </div>
     </div>
     <camp-add
-      :dialog-data="dialogData"
-      @handleDialogInfo="getDialogInfo"
+        :dialog-data="dialogData"
+        @handleDialogInfo="getDialogInfo"
     ></camp-add>
   </div>
 </template>
 
 <script>
-import {
-  campFindAll,
-  campRelationShipFindAll,
-  campRelationShipRemove,
-  campRemove,
-  campSave,
-} from "@/api/api";
+import {campFindAll, campRelationShipFindAll, campRelationShipRemove, campRemove, campSave,} from "@/api/api";
 
 const CampAdd = () => import("./CampAdd.vue");
 export default {
   name: "CampPage",
-  components: { CampAdd },
+  components: {CampAdd},
   data() {
     return {
       listType: 1,
@@ -213,11 +210,11 @@ export default {
       ],
       // "红方", "蓝方", "白方", "绿方", "黑方"
       dynamicTags: [
-        { id: 1, name: "红方", color: "red", children: [] },
-        { id: 2, name: "蓝方", color: "lightblue", children: [] },
-        { id: 3, name: "白方", color: "white", children: [] },
-        { id: 4, name: "绿方", color: "lightgreen", children: [] },
-        { id: 5, name: "黑方", color: "black", children: [] },
+        {id: 1, name: "红方", color: "red", children: []},
+        {id: 2, name: "蓝方", color: "lightblue", children: []},
+        {id: 3, name: "白方", color: "white", children: []},
+        {id: 4, name: "绿方", color: "lightgreen", children: []},
+        {id: 5, name: "黑方", color: "black", children: []},
       ],
       inputVisible: false,
       inputValue: "",
@@ -278,16 +275,17 @@ export default {
         item.options = [];
         item.options = this.relationshipOptions;
         let cLen = item.children.length,
-          minus = len - cLen;
+            minus = len - cLen;
         for (let index = 0; index < minus; index++) {
-          item.children.unshift({ relationship: "--" });
+          item.children.unshift({relationship: "--"});
         }
       });
       // console.log(this.dynamicTags, "--000this.dynamicTags");
       this.dynamicTags.forEach((item) => {
         let children = item.children;
-        item.children.forEach((child) => {
+        children.forEach((child) => {
           child.select = {
+            ol: {},
             value: "",
             options: this.relationshipOptions,
           };
@@ -299,19 +297,21 @@ export default {
         });
       });
     },
-    handleRelationChange(val, pindex, index, re) {
+    handleRelationChange(val, pindex, index, re, select) {
       console.log(
-        this.dynamicTags[pindex].children[index],
-        this.dynamicTags[pindex].children[index].id,
-        this.dynamicTags[pindex].children[index].name,
-        "val:",
-        val,
-        "pindex",
-        pindex,
-        "index",
-        index,
-        "re",
-        re
+          this.dynamicTags[pindex].children[index],
+          this.dynamicTags[pindex].children[index].id,
+          this.dynamicTags[pindex].children[index].name,
+          "val:",
+          val,
+          "pindex",
+          pindex,
+          "index",
+          index,
+          "re",
+          re,
+          'select',
+          JSON.parse(JSON.stringify(select))
       );
       this.$forceUpdate();
       // console.log(
@@ -400,50 +400,51 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          let params = {
-            id: "",
-          };
-          campRelationShipRemove(params).then((res) => {
-            console.log(res, "==res");
-            this.$message({
-              type: "success",
-              message: "删除成功!",
+          .then(() => {
+            let params = {
+              id: "",
+            };
+            campRelationShipRemove(params).then((res) => {
+              console.log(res, "==res");
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.getCampRelationShipData();
             });
-            this.getCampRelationShipData();
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
     },
-    onSubmit() {},
+    onSubmit() {
+    },
     handleTagClose(tag, index) {
       this.$confirm("确定要删除吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          campRemove({ id: tag.id }).then((res) => {
-            console.log(res, "==res");
-            this.$message({
-              type: "success",
-              message: "删除成功!",
+          .then(() => {
+            campRemove({id: tag.id}).then((res) => {
+              console.log(res, "==res");
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.dynamicTags.splice(index, 1);
+              this.getCapData();
             });
-            this.dynamicTags.splice(index, 1);
-            this.getCapData();
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
     },
     //删除阵营
     removeCamp() {
@@ -501,24 +502,30 @@ export default {
     background-color: rgb(191, 191, 191);
     margin-bottom: 12px;
   }
+
   .icon-camp {
     margin-left: 10px;
     font-size: 20px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+
     &.active {
       color: #409eff;
     }
+
     &:hover {
       opacity: 0.8;
       color: #409eff;
     }
   }
+
   .list-1 {
     position: relative;
+
     .metrix-relationship0 {
       // padding: 34px 0 0 94px;
     }
+
     .metrix-relationship {
       > div {
         // display: inline-block;
@@ -533,9 +540,11 @@ export default {
         border: 1px solid #d9ecff;
       }
     }
+
     .metrix-ul {
       position: absolute;
       color: #409eff;
+
       > li {
         // display: inline-block;
         width: 94px;
@@ -547,14 +556,17 @@ export default {
         border: 1px solid #d9ecff;
       }
     }
+
     .metrix-ul-horizon {
       left: 94px;
     }
+
     .metrix-ul-vertical {
       // position: absolute;
       // color: #409eff;
       // top: 34px;
       padding-top: 34px;
+
       .vertical-item {
         width: 94px;
         height: 34px;
@@ -564,10 +576,12 @@ export default {
       }
     }
   }
+
   .el-tag + .el-tag {
     margin-left: 10px;
     margin-bottom: 10px;
   }
+
   .tag {
     display: inline-block;
     background-color: #ecf5ff;
@@ -582,6 +596,7 @@ export default {
     border-radius: 4px;
     box-sizing: border-box;
     white-space: nowrap;
+
     .el-icon-close {
       border-radius: 50%;
       text-align: center;
@@ -594,6 +609,7 @@ export default {
       vertical-align: middle;
       top: -1px;
       right: -5px;
+
       &:hover {
         // opacity: 0.5;
         color: #fff;
@@ -601,10 +617,12 @@ export default {
       }
     }
   }
+
   .tag + .tag {
     margin-left: 10px;
     margin-bottom: 10px;
   }
+
   .button-new-tag {
     margin-left: 10px;
     height: 32px;
@@ -613,6 +631,7 @@ export default {
     padding-bottom: 0;
     font-size: 20px;
   }
+
   .input-new-tag {
     width: 90px;
     margin-left: 10px;
